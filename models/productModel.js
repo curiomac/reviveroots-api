@@ -44,7 +44,7 @@ const productSchema = new mongoose.Schema({
     {
       url: {
         type: String,
-        required: [true, "Please enter Alternate Name"],
+        required: [true, "Please Provide Product Images"],
       },
     },
   ],

@@ -5,7 +5,7 @@ const {
   authorizeRoles,
 } = require("../middlewares/authenticate");
 const { headerVerification } = require("../middlewares/headerVerification");
-const { createProduct } = require("../controllers/productController");
+const { createProduct, getProducts } = require("../controllers/productController");
 const multer = require("multer");
 const path = require("path");
 
@@ -23,11 +23,19 @@ const upload = multer({
 router
   .route("/create/product")
   .post(
-    headerVerification,
+    // headerVerification,
     // isAuthenticatedUser,
     // authorizeRoles("admin", "manager"),
     upload.array("productImages"),
     createProduct
+  );
+router
+  .route("/get/products")
+  .get(
+    // headerVerification,
+    // isAuthenticatedUser,
+    // authorizeRoles("admin", "manager"),
+    getProducts
   );
 
 module.exports = router;

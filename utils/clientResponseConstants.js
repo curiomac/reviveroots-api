@@ -1,6 +1,7 @@
 const CLIENT_MESSAGES = {
   SUCCESS_MESSAGES: {
     PRODUCT_CREATION_SUCCESSFUL: "Product created successfully.",
+    PRODUCTS_FETCHED_SUCCESSFUL: "Product fetched successfully.",
   },
   ERROR_MESSAGES: {
     INTERNAL_SERVER_ERROR: "Internal Server Error",
@@ -25,7 +26,8 @@ const CLIENT_MESSAGES = {
       "Invalid phone number. Please check your phone number and try again.",
     URL_NOT_FOUND: "The requested resource could not be found on the server.",
     AUTHENTICATION_ERROR: "Login first to handle this resource",
-    PRODUCT_CREATION_FAILED: "Product creation failed."
+    PRODUCT_CREATION_FAILED: "Product creation failed.",
+    PRODUCTS_FETCH_FAILED: "Product fetching failed."
   },
 };
 

@@ -32,6 +32,9 @@ const LOGGER_MESSAGES = {
   PRODUCT_CREATION: "Product creation function initiated.",
   PRODUCT_CREATION_COMPLETED: "Product creation function completed.",
   PRODUCT_CREATION_FAILED: "Product creation function failed.",
+  PRODUCTS_FETCH: "Product fetching function initiated.",
+  PRODUCTS_FETCH_COMPLETED: "Product fetching function completed.",
+  PRODUCTS_FETCH_FAILED: "Product fetching function failed.",
 };
 
 module.exports = LOGGER_MESSAGES;
