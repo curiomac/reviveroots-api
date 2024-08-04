@@ -44,6 +44,9 @@ const LOGGER_MESSAGES = {
   PRODUCT_DELETE: "Product deleting function initiated.",
   PRODUCT_DELETE_COMPLETED: "Product deleting function completed.",
   PRODUCT_DELETE_FAILED: "Product deleting function failed.",
+  ADD_TO_CART: "Add to cart function initiated.",
+  ADD_TO_CART_COMPLETED: "Add to cart function completed.",
+  ADD_TO_CART_FAILED: "Add to cart function failed.",
 };
 
 module.exports = LOGGER_MESSAGES;

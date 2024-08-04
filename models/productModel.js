@@ -119,7 +119,7 @@ const productSchema = new mongoose.Schema({
     type: String,
     default: "0",
   },
-  sceduleProduct: {
+  productSchedule: {
     feedDate: {
       type: Date,
       required: true,
