@@ -4,7 +4,7 @@ const errorMiddleware = require("./middlewares/error");
 const cookieParser = require("cookie-parser");
 const cors = require("cors");
 const path = require("path");
-const auth = require("./routes/auth");
+const user = require("./routes/user");
 const product = require("./routes/product");
 
 const corsOptions = {
@@ -27,7 +27,7 @@ app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 // const BASE_URL = process.env.BASE_URL;
 const BASE_URL = "/api/bytestation/v1";
 
-app.use(BASE_URL, auth);
+app.use(BASE_URL, user);
 app.use(BASE_URL, product);
 
 app.use(errorMiddleware);

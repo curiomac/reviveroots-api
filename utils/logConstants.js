@@ -16,15 +16,18 @@ const LOGGER_MESSAGES = {
   LOGIN_USER: "User login function initiated",
   LOGIN_COMPLETED: "User login function completed.",
   LOGIN_FAILED: "User login function failed.",
+  PROFILE_FETCH: "Fetch profile function initiated",
+  PROFILE_FETCH_COMPLETED: "Fetch profile function completed.",
+  PROFILE_FETCH_FAILED: "Fetch profile function failed.",
   EMAIL_SEND: "Email send successful",
   EMAIL_SEND_FAILED: "Email send failed",
   INVALID_EMAIL_OR_PASSWORD:
     "Invalid email or password. Please check your credentials and try again.",
   EXISTING_USER:
     "This user is already registered. Please choose a different email or sign in.",
-  EMAIL_VERIFICATION: "Email verification function initiated",
-  EMAIL_VERIFICATION_COMPLETED: "Email verification function completed",
-  EMAIL_VERIFICATION_FAILED: "Email verification function failed.",
+  SECRET_CODE_SEND: "Secret code send function initiated",
+  SECRET_CODE_SEND_COMPLETED: "Secret code send function completed",
+  SECRET_CODE_SEND_FAILED: "Secret code send function failed.",
   USER_NOT_FOUND:
     "User not found. Please verify the entered Id or contact support for assistance.",
   EMAIL_VERIFY_PENDING:
@@ -32,9 +35,15 @@ const LOGGER_MESSAGES = {
   PRODUCT_CREATION: "Product creation function initiated.",
   PRODUCT_CREATION_COMPLETED: "Product creation function completed.",
   PRODUCT_CREATION_FAILED: "Product creation function failed.",
-  PRODUCTS_FETCH: "Product fetching function initiated.",
-  PRODUCTS_FETCH_COMPLETED: "Product fetching function completed.",
-  PRODUCTS_FETCH_FAILED: "Product fetching function failed.",
+  PRODUCTS_FETCH: "Products fetching function initiated.",
+  PRODUCTS_FETCH_COMPLETED: "Products fetching function completed.",
+  PRODUCTS_FETCH_FAILED: "Products fetching function failed.",
+  PRODUCT_FETCH: "Product fetching function initiated.",
+  PRODUCT_FETCH_COMPLETED: "Product fetching function completed.",
+  PRODUCT_FETCH_FAILED: "Product fetching function failed.",
+  PRODUCT_DELETE: "Product deleting function initiated.",
+  PRODUCT_DELETE_COMPLETED: "Product deleting function completed.",
+  PRODUCT_DELETE_FAILED: "Product deleting function failed.",
 };
 
 module.exports = LOGGER_MESSAGES;

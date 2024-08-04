@@ -9,8 +9,8 @@ const server = app.listen(process.env.PORT, ()=>{
     console.log(`My server listening to the port: ${process.env.PORT } in ${process.env.NODE_ENV } `)
 })
 
-process.on('unhandledRejection',(err)=>{
-    console.log(`Error: ${err.message}`);
+process.on('unhandledRejection',(error)=>{
+    console.log(`Error: ${error.message}`);
     console.log('Shutting down the server due to unhandled rejection error')
     server.close(()=>{
         process.exit(1);
@@ -18,8 +18,8 @@ process.on('unhandledRejection',(err)=>{
 })
 
 
-process.on('uncaughtException',(err)=>{
-    console.log(`Error: ${err.message}`);
+process.on('uncaughtException',(error)=>{
+    console.log(`Error: ${error.message}`);
     console.log('Shutting down the server due to uncaught rejection error')
     server.close(()=>{
         process.exit(1);
