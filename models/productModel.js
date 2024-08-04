@@ -18,13 +18,15 @@ const productSchema = new mongoose.Schema({
     type: String,
     required: [true, "Please enter the Sub Description"],
   },
+  isAdditionalInfo: {
+    type: String,
+    default: "false",
+  },
   countryOfMade: {
     type: String,
-    required: [true, "Please enter the Country of Made"],
   },
   manufacturer: {
     type: String,
-    required: [true, "Please enter the Manufacturer"],
   },
   attributes: {
     weight: {
@@ -34,7 +36,6 @@ const productSchema = new mongoose.Schema({
   },
   productTags: {
     type: Array,
-    required: [true, "Please provide Product Tags"],
   },
   productCategory: {
     type: String,
@@ -50,27 +51,27 @@ const productSchema = new mongoose.Schema({
   ],
   availableQuantity: {
     type: String,
-    default: "0"
+    default: "0",
   },
   minimumQuantity: {
     type: String,
-    default: "0"
+    default: "0",
   },
   maximumQuantity: {
     type: String,
-    default: "0"
+    default: "0",
   },
   unitPrice: {
     type: String,
-    default: "0"
+    required: [true, "Please enter the Unit Price"],
   },
   profitPercentage: {
     type: String,
-    default: "0"
+    required: [true, "Please enter the Profit Percentage"],
   },
   grossPrice: {
     type: String,
-    default: "0"
+    default: "0",
   },
   isDiscountedProduct: {
     type: String,
@@ -85,34 +86,44 @@ const productSchema = new mongoose.Schema({
   discountPercentage: {
     type: String,
   },
+  discountPrice: {
+    type: String,
+    default: "0",
+  },
   salePrice: {
     type: String,
-    default: "0"
+    default: "0",
   },
   deliveryWithinDistrict: {
     type: String,
-    default: "0"
+    default: "0",
   },
   deliveryWithinState: {
     type: String,
-    default: "0"
+    default: "0",
   },
   deliveryInterState: {
     type: String,
-    default: "0"
+    default: "0",
   },
   isCashOnDeliveryAccepted: {
     type: String,
-    default: "false"
+    default: "false",
   },
   productStatus: {
     type: String,
     enum: [STATUS.ACTIVE, STATUS.INACTIVE, STATUS.PENDING],
-    default: "pending",
+    default: STATUS.PENDING,
   },
   aggregateRating: {
     type: String,
     default: "0",
+  },
+  sceduleProduct: {
+    feedDate: {
+      type: Date,
+      required: true,
+    },
   },
   verifiedPurchasUsers: [
     {

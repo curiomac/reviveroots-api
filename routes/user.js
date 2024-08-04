@@ -1,8 +1,9 @@
 const express = require("express");
 const multer = require("multer");
 const path = require("path");
-const { registerUser } = require("../controllers/authController");
+const { registerUser, loginUser, getProfile, sendSecretCode } = require("../controllers/userController");
 const { headerVerification } = require("../middlewares/headerVerification");
+const { isAuthenticatedUser } = require("../middlewares/authenticate");
 const router = express.Router();
 const upload = multer({
   storage: multer.diskStorage({
@@ -15,6 +16,9 @@ const upload = multer({
   }),
 });
 
+router.route("/send/secret_code").post(headerVerification, sendSecretCode);
 router.route("/create/user").post(headerVerification, registerUser);
+router.route("/login").post(headerVerification, loginUser);
+router.route("/get/profile").get(headerVerification, isAuthenticatedUser, getProfile);
 
 module.exports = router;

@@ -1,10 +1,10 @@
 const randomstring = require('randomstring')
 
-const otpGenerator = () => {
+const secretCodeGenerator = () => {
   return randomstring.generate({
     length: 6,
     charset: "numeric",
   });
 };
 
-module.exports = otpGenerator;
+module.exports = secretCodeGenerator;

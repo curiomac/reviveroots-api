@@ -18,6 +18,14 @@ const STATUS = {
   PENDING: "pending",
 };
 
+const ROLES = {
+  USER: "user",
+  SUPERVISOR: 'supervisor',
+  MANAGER: "manager",
+  ADMIN: "admin",
+  SUPREME_ADMIN: "supreme_admin",
+};
+
 const DBCONNECTION = {
   SUCCESSFUL: "Connected to MongoDB",
   UNSUCCESSFUL: "MongoDB connection error",
@@ -29,6 +37,7 @@ const DBCONNECTION = {
 const TOKEN = {
   PERFIX_TOKEN: "Bearer",
 };
+
 module.exports = {
   ERROR_MESSAGES,
   MESSAGES,
@@ -36,4 +45,5 @@ module.exports = {
   COLLECTION_NAMES,
   STATUS,
   TOKEN,
+  ROLES
 };

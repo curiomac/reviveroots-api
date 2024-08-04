@@ -5,9 +5,15 @@ const {
   authorizeRoles,
 } = require("../middlewares/authenticate");
 const { headerVerification } = require("../middlewares/headerVerification");
-const { createProduct, getProducts } = require("../controllers/productController");
+const {
+  createProduct,
+  getProducts,
+  getProduct,
+  deleteProduct,
+} = require("../controllers/productController");
 const multer = require("multer");
 const path = require("path");
+const { ROLES } = require("../utils/appConstants");
 
 const upload = multer({
   storage: multer.diskStorage({
@@ -20,22 +26,30 @@ const upload = multer({
   }),
 });
 
-router
-  .route("/create/product")
-  .post(
-    // headerVerification,
-    // isAuthenticatedUser,
-    // authorizeRoles("admin", "manager"),
-    upload.array("productImages"),
-    createProduct
-  );
-router
-  .route("/get/products")
-  .get(
-    // headerVerification,
-    // isAuthenticatedUser,
-    // authorizeRoles("admin", "manager"),
-    getProducts
-  );
+router.route("/create/product").post(
+  // headerVerification,
+  // isAuthenticatedUser,
+  // authorizeRoles(
+  //   ROLES.SUPERVISOR,
+  //   ROLES.MANAGER,
+  //   ROLES.ADMIN,
+  //   ROLES.SUPREME_ADMIN
+  // ),
+  upload.array("productImages"),
+  createProduct
+);
+
+router.route("/get/products").get(
+  // headerVerification,
+  getProducts
+);
+router.route("/get/product").get(
+  // headerVerification,
+  getProduct
+);
+router.route("/delete/product").delete(
+  // headerVerification,
+  deleteProduct
+);
 
 module.exports = router;
