@@ -27,28 +27,28 @@ const upload = multer({
 });
 
 router.route("/create/product").post(
-  // headerVerification,
-  // isAuthenticatedUser,
-  // authorizeRoles(
-  //   ROLES.SUPERVISOR,
-  //   ROLES.MANAGER,
-  //   ROLES.ADMIN,
-  //   ROLES.SUPREME_ADMIN
-  // ),
+  headerVerification,
+  isAuthenticatedUser,
+  authorizeRoles(
+    ROLES.SUPERVISOR,
+    ROLES.MANAGER,
+    ROLES.ADMIN,
+    ROLES.SUPREME_ADMIN
+  ),
   upload.array("productImages"),
   createProduct
 );
 
 router.route("/get/products").get(
-  // headerVerification,
+  headerVerification,
   getProducts
 );
 router.route("/get/product").get(
-  // headerVerification,
+  headerVerification,
   getProduct
 );
 router.route("/delete/product").delete(
-  // headerVerification,
+  headerVerification,
   deleteProduct
 );
 

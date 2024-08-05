@@ -7,6 +7,7 @@ const CLIENT_MESSAGES = {
     LOGIN_SUCCESSFUL: "Logged in successfully.",
     REGISTERATION_SUCCESSFUL: "Registered successfully.",
     PROFILE_FETCHED_SUCCESSFUL: "Profile fetched successfully.",
+    ADD_TO_CART_SUCCESSFUL: "Item added to the cart.",
     CODE_SENT_SUCCESSFUL:
       "Secret code sent successfully. Please check your inbox for instructions.",
   },
@@ -39,7 +40,8 @@ const CLIENT_MESSAGES = {
     PRODUCT_CREATION_FAILED: "Product creation failed.",
     PRODUCTS_FETCH_FAILED: "Products fetching failed.",
     PRODUCT_FETCH_FAILED: "Product fetching failed.",
-    PRODUCT_NOT_FOUND: "Product not found. Please verify the entered Product Id or contact support for assistance.",
+    PRODUCT_NOT_FOUND:
+      "Product not found. Please verify the entered Product Id or contact support for assistance.",
     USER_REGISTERAION_FAILED: "User registeration failed.",
     LOGIN_FAILED: "User login failed.",
     EMPTY_FIELD_ERROR: "Please provide all the required fields.",
@@ -47,6 +49,8 @@ const CLIENT_MESSAGES = {
       "The selected date must not be before the current date.",
     MAX_QUANTITY_GREATER_AVAILABLE_QUANTITY:
       "Max Quantity must not be greater thaan the Available Quantity.",
+    PRODUCT_ALREADY_IN_CART: "Product is already in the cart.",
+    PRODUCT_NOT_IN_CART: "Product is not found in the cart.",
   },
 };
 

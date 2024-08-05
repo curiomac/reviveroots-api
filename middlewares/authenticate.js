@@ -18,9 +18,21 @@ exports.isAuthenticatedUser = async (req, res, next) => {
     }
     const decoded = jwt.verify(authorization, process.env.JWT_SECRET);
     req.user = await User.findById(decoded.id);
+    if (!req.user) {
+      RESPONSE.handleErrorResponse(
+        HTTP_STATUS_CODES.UNAUTHORIZED,
+        `${CLIENT_MESSAGES.ERROR_MESSAGES.INVALID_TOKEN}`,
+        res
+      );
+      return;
+    }
     next();
   } catch (error) {
-    RESPONSE.handleErrorResponse(HTTP_STATUS_CODES.UNAUTHORIZED, error.message, res);
+    RESPONSE.handleErrorResponse(
+      HTTP_STATUS_CODES.UNAUTHORIZED,
+      error.message,
+      res
+    );
   }
 };
 exports.authorizeRoles = (...roles) => {
