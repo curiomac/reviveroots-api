@@ -47,6 +47,9 @@ const LOGGER_MESSAGES = {
   ADD_TO_CART: "Add to cart function initiated.",
   ADD_TO_CART_COMPLETED: "Add to cart function completed.",
   ADD_TO_CART_FAILED: "Add to cart function failed.",
+  GET_CART_ITEMS: "Get cart items function initiated.",
+  GET_CART_ITEMS_COMPLETED: "Get cart items function completed.",
+  GET_CART_ITEMS_FAILED: "Get cart items function failed.",
 };
 
 module.exports = LOGGER_MESSAGES;

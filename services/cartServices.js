@@ -35,33 +35,7 @@ const CartService = () => {
 
       const isCartFound = await Cart.findOne({ userId });
 
-      const getCheckoutPrice = () => {
-        let totalSalePrice = product?.salePrice;
-        if (isCartFound) {
-          const salePrices = isCartFound?.productsIdsInCart?.map(
-            (data) =>
-              Number(data?.currentSalePrice) *
-              (Number(data?.quantity) +
-                (action === "remove" &&
-                productId.toString() === data.productId.toString()
-                  ? -1
-                  : productId.toString() === data.productId.toString()
-                  ? 1
-                  : 0))
-          );
-          totalSalePrice = salePrices?.reduce(
-            (total, price) => total + price,
-            0
-          );
-        }
-        return totalSalePrice;
-      };
-
-      const formattedData = {
-        cartProductData,
-        checkoutPrice: getCheckoutPrice(),
-      };
-      let cart = {};
+      let updatedCart = {};
       if (isCartFound) {
         if (action === "remove") {
           const productInCart = isCartFound.productsIdsInCart.find(
@@ -72,22 +46,20 @@ const CartService = () => {
             const afterReduced = Number(productInCart.quantity) - 1;
             if (afterReduced <= 0) {
               // Remove product from cart
-              cart = await Cart.findOneAndUpdate(
+              updatedCart = await Cart.findOneAndUpdate(
                 { userId },
                 {
                   $pull: { productsIdsInCart: { productId: productId } },
-                  $set: { checkoutPrice: formattedData.checkoutPrice },
                 },
                 { new: true, upsert: true }
               );
             } else {
               // Update product quantity in cart
-              cart = await Cart.findOneAndUpdate(
+              updatedCart = await Cart.findOneAndUpdate(
                 { userId, "productsIdsInCart.productId": productId },
                 {
                   $set: {
                     "productsIdsInCart.$.quantity": afterReduced,
-                    checkoutPrice: formattedData.checkoutPrice,
                   },
                 },
                 { new: true, upsert: true }
@@ -106,25 +78,23 @@ const CartService = () => {
           if (productAlreadyInCart) {
             // Increment the quantity of the existing product
             const newQuantity = Number(productAlreadyInCart.quantity) + 1;
-            cart = await Cart.findOneAndUpdate(
+            updatedCart = await Cart.findOneAndUpdate(
               { userId, "productsIdsInCart.productId": productId },
               {
                 $set: {
                   "productsIdsInCart.$.quantity": newQuantity,
-                  checkoutPrice: formattedData.checkoutPrice,
                 },
               },
               { new: true, upsert: true }
             );
           } else {
             // Adding new product to cart
-            cart = await Cart.findOneAndUpdate(
+            updatedCart = await Cart.findOneAndUpdate(
               { userId },
               {
                 $addToSet: {
                   productsIdsInCart: cartProductData,
                 },
-                $set: { checkoutPrice: formattedData.checkoutPrice },
               },
               { new: true, upsert: true }
             );
@@ -132,17 +102,92 @@ const CartService = () => {
         }
       } else {
         // Creating cart in database
-        cart = await Cart.create({
+        updatedCart = await Cart.create({
           userId,
           productsIdsInCart: [cartProductData],
-          checkoutPrice: formattedData.checkoutPrice,
         });
       }
 
+      const getCheckoutPrice = () => {
+        const salePrices = updatedCart?.productsIdsInCart?.map(
+          (data) =>
+            Number(data?.currentSalePrice) *
+            Number(data?.quantity)
+        );
+        let totalSalePrice = salePrices?.reduce(
+          (total, price) => total + price,
+          0
+        );
+        return totalSalePrice;
+      };
+
+      const cartValue = await Cart.findOneAndUpdate({ userId }, { $set: { isEligibleForFreeDelivery: getCheckoutPrice() > 1000 ? true : false, checkoutPrice: getCheckoutPrice().toString() } },
+        { new: true, upsert: true });
+
       // Returning client response to controller
       return {
-        data: { cart },
+        data: { cart: cartValue },
         message: CLIENT_MESSAGES.SUCCESS_MESSAGES.ADD_TO_CART_SUCCESSFUL,
+      };
+    } catch (error) {
+      throw new CustomError(error.message);
+    }
+  };
+
+  /**
+   * Cart Items Fetching
+   */
+
+  const getCartItems = async (req) => {
+    try {
+      const userId = req?.user?.id;
+      const user = await User.findById(userId);
+      if (!user) {
+        throw new CustomError(CLIENT_MESSAGES.ERROR_MESSAGES.USER_NOT_FOUND);
+      }
+
+      const cartItems = await Cart.findOne({ userId });
+      if (!cartItems) {
+        // Returning client response to controller
+        return {
+          data: { cart: { userId, productsIdsInCart: [] } },
+          message: CLIENT_MESSAGES.SUCCESS_MESSAGES.CART_ITEMS_FETCH_SUCCESSFUL,
+        };
+      }
+      await Promise.all(cartItems.productsIdsInCart.map(async (data) => {
+        const product = await Product.findById(data.productId);
+        await Cart.findOneAndUpdate(
+          { userId, "productsIdsInCart.productId": data.productId },
+          {
+            $set: {
+              "productsIdsInCart.$.currentSalePrice": product?.salePrice,
+              "productsIdsInCart.$.isPriceChangesRecorded": data.onAddSalePrice === product?.salePrice ? 'false' : 'true',
+            },
+          },
+          { new: true, upsert: true }
+        );
+        return;
+      }));
+      const updatedCart = await Cart.findOne({ userId });
+      const getCheckoutPrice = () => {
+        const salePrices = updatedCart?.productsIdsInCart?.map(
+          (data) =>
+            Number(data?.currentSalePrice) *
+            Number(data?.quantity)
+        );
+        let totalSalePrice = salePrices?.reduce(
+          (total, price) => total + price,
+          0
+        );
+        return totalSalePrice;
+      };
+
+      const cart = await Cart.findOneAndUpdate({ userId }, { $set: { isEligibleForFreeDelivery: getCheckoutPrice() > 1000 ? true : false, checkoutPrice: getCheckoutPrice().toString() } },
+        { new: true, upsert: true });
+      // Returning client response to controller
+      return {
+        data: { cart: { ...cart._doc, checkoutPrice: getCheckoutPrice().toString() } },
+        message: CLIENT_MESSAGES.SUCCESS_MESSAGES.CART_ITEMS_FETCH_SUCCESSFUL,
       };
     } catch (error) {
       throw new CustomError(error.message);
@@ -154,6 +199,7 @@ const CartService = () => {
    */
   return {
     addToCart,
+    getCartItems
   };
 };
 
