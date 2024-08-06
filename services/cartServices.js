@@ -212,7 +212,7 @@ const CartService = () => {
    * Checkout Details Fetching
    */
 
-  const getCheckoutDetails = async (req) => {
+  const getDeliveryCharges = async (req) => {
     try {
       const userId = req?.user?.id;
       const user = await User.findById(userId);
@@ -243,7 +243,7 @@ const CartService = () => {
   return {
     addToCart,
     getCartItems,
-    getCheckoutDetails,
+    getDeliveryCharges,
   };
 };
 
