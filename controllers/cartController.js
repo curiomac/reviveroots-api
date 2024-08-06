@@ -74,3 +74,32 @@ exports.getCartItems = async (req, res, next) => {
     );
   }
 };
+// Get Checkout Details Items - /api/bytestation/v1/get/checkout_details
+exports.getCheckoutDetails = async (req, res, next) => {
+  try {
+    // Initiating Logs
+    console.log(LOGGER_MESSAGES.GET_CART_ITEMS);
+    // Response from the Service
+    const responseData = await CartServiceInstance.getCartItems(req);
+    // Closing Logs
+    console.log(LOGGER_MESSAGES.GET_CART_ITEMS_COMPLETED);
+    // Sending Response to Client
+    RESPONSE.handleSuccessResponse(
+      HTTP_STATUS_CODES.OK,
+      responseData.message,
+      responseData.data,
+      res
+    );
+  } catch (error) {
+    // Closing Logs
+    console.log(LOGGER_MESSAGES.GET_CART_ITEMS_FAILED);
+    // Logging Catched Error
+    console.log("Error: ", error);
+    // Sending Response to Client
+    RESPONSE.handleErrorResponse(
+      HTTP_STATUS_CODES.INTERNAL_SERVER_ERROR,
+      error.message,
+      res
+    );
+  }
+};

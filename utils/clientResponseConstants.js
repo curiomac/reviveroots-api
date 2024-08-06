@@ -52,6 +52,7 @@ const CLIENT_MESSAGES = {
       "Max Quantity must not be greater thaan the Available Quantity.",
     PRODUCT_ALREADY_IN_CART: "Product is already in the cart.",
     PRODUCT_NOT_IN_CART: "Product is not found in the cart.",
+    CART_NOT_FOUND: "Cart not found. Please verify the entered Id or contact support for assistance.",
   },
 };
 

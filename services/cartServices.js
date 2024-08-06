@@ -110,9 +110,7 @@ const CartService = () => {
 
       const getCheckoutPrice = () => {
         const salePrices = updatedCart?.productsIdsInCart?.map(
-          (data) =>
-            Number(data?.currentSalePrice) *
-            Number(data?.quantity)
+          (data) => Number(data?.currentSalePrice) * Number(data?.quantity)
         );
         let totalSalePrice = salePrices?.reduce(
           (total, price) => total + price,
@@ -121,8 +119,16 @@ const CartService = () => {
         return totalSalePrice;
       };
 
-      const cartValue = await Cart.findOneAndUpdate({ userId }, { $set: { isEligibleForFreeDelivery: getCheckoutPrice() > 1000 ? true : false, checkoutPrice: getCheckoutPrice().toString() } },
-        { new: true, upsert: true });
+      const cartValue = await Cart.findOneAndUpdate(
+        { userId },
+        {
+          $set: {
+            isEligibleForFreeDelivery: getCheckoutPrice() > 1000 ? true : false,
+            checkoutPrice: getCheckoutPrice().toString(),
+          },
+        },
+        { new: true, upsert: true }
+      );
 
       // Returning client response to controller
       return {
@@ -154,26 +160,27 @@ const CartService = () => {
           message: CLIENT_MESSAGES.SUCCESS_MESSAGES.CART_ITEMS_FETCH_SUCCESSFUL,
         };
       }
-      await Promise.all(cartItems.productsIdsInCart.map(async (data) => {
-        const product = await Product.findById(data.productId);
-        await Cart.findOneAndUpdate(
-          { userId, "productsIdsInCart.productId": data.productId },
-          {
-            $set: {
-              "productsIdsInCart.$.currentSalePrice": product?.salePrice,
-              "productsIdsInCart.$.isPriceChangesRecorded": data.onAddSalePrice === product?.salePrice ? 'false' : 'true',
+      await Promise.all(
+        cartItems.productsIdsInCart.map(async (data) => {
+          const product = await Product.findById(data.productId);
+          await Cart.findOneAndUpdate(
+            { userId, "productsIdsInCart.productId": data.productId },
+            {
+              $set: {
+                "productsIdsInCart.$.currentSalePrice": product?.salePrice,
+                "productsIdsInCart.$.isPriceChangesRecorded":
+                  data.onAddSalePrice === product?.salePrice ? "false" : "true",
+              },
             },
-          },
-          { new: true, upsert: true }
-        );
-        return;
-      }));
+            { new: true, upsert: true }
+          );
+          return;
+        })
+      );
       const updatedCart = await Cart.findOne({ userId });
       const getCheckoutPrice = () => {
         const salePrices = updatedCart?.productsIdsInCart?.map(
-          (data) =>
-            Number(data?.currentSalePrice) *
-            Number(data?.quantity)
+          (data) => Number(data?.currentSalePrice) * Number(data?.quantity)
         );
         let totalSalePrice = salePrices?.reduce(
           (total, price) => total + price,
@@ -182,11 +189,47 @@ const CartService = () => {
         return totalSalePrice;
       };
 
-      const cart = await Cart.findOneAndUpdate({ userId }, { $set: { isEligibleForFreeDelivery: getCheckoutPrice() > 1000 ? true : false, checkoutPrice: getCheckoutPrice().toString() } },
-        { new: true, upsert: true });
+      const cart = await Cart.findOneAndUpdate(
+        { userId },
+        {
+          $set: {
+            isEligibleForFreeDelivery: getCheckoutPrice() > 1000 ? true : false,
+            checkoutPrice: getCheckoutPrice().toString(),
+          },
+        },
+        { new: true, upsert: true }
+      );
       // Returning client response to controller
       return {
-        data: { cart: { ...cart._doc, checkoutPrice: getCheckoutPrice().toString() } },
+        data: { cart },
+        message: CLIENT_MESSAGES.SUCCESS_MESSAGES.CART_ITEMS_FETCH_SUCCESSFUL,
+      };
+    } catch (error) {
+      throw new CustomError(error.message);
+    }
+  };
+  /**
+   * Checkout Details Fetching
+   */
+
+  const getCheckoutDetails = async (req) => {
+    try {
+      const userId = req?.user?.id;
+      const user = await User.findById(userId);
+      if (!user) {
+        throw new CustomError(CLIENT_MESSAGES.ERROR_MESSAGES.USER_NOT_FOUND);
+      }
+
+      const cart = await Cart.findOne({ userId });
+      if (!cart) {
+        throw new CustomError(CLIENT_MESSAGES.ERROR_MESSAGES.CART_NOT_FOUND);
+      }
+      
+      // Returning client response to controller
+      return {
+        data: {
+          cart,
+        },
         message: CLIENT_MESSAGES.SUCCESS_MESSAGES.CART_ITEMS_FETCH_SUCCESSFUL,
       };
     } catch (error) {
@@ -199,7 +242,8 @@ const CartService = () => {
    */
   return {
     addToCart,
-    getCartItems
+    getCartItems,
+    getCheckoutDetails,
   };
 };
 
