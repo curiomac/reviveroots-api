@@ -16,7 +16,6 @@ exports.sendSecretCode = async (req, res) => {
     // Initiating Logs
     console.log(LOGGER_MESSAGES.CONTROLLER + LOGGER_MESSAGES.SECRET_CODE_SEND);
     // Body data
-    const userData = req.body;
     const { email, authCode } = req.body;
     // Checking required fields
     if (!email || !authCode) {
@@ -24,7 +23,7 @@ exports.sendSecretCode = async (req, res) => {
     }
     // Response from the Service
     const responseData = await UserServiceInstance.sendSecretCode(
-      userData,
+      req.body,
       req
     );
     // Closing Logs
@@ -58,16 +57,15 @@ exports.registerUser = async (req, res, next) => {
     // Initiating Logs
     console.log(LOGGER_MESSAGES.CONTROLLER + LOGGER_MESSAGES.REGISTER_USER);
     // Body Data
-    const userData = req.body;
     const { firstName, mobileNumber, email, secretCodeClient } = req.body;
     // Checking required fields
     if (!email || !firstName || !mobileNumber || !secretCodeClient) {
       throw new CustomError(CLIENT_MESSAGES.ERROR_MESSAGES.EMPTY_FIELD_ERROR);
     }
     // Response from the Service
-    const responseData = await UserServiceInstance.registerUser(userData, req);
+    const responseData = await UserServiceInstance.registerUser(req.body, req);
     // Sending Response to Client
-    sendToken(responseData, res);
+    sendToken(responseData, res, LOGGER_MESSAGES.CONTROLLER + LOGGER_MESSAGES.REGISTER_USER_COMPLETED);
   } catch (error) {
     // Closing Logs
     console.log(
@@ -89,18 +87,15 @@ exports.loginUser = async (req, res, next) => {
     // Initiating Logs
     console.log(LOGGER_MESSAGES.CONTROLLER + LOGGER_MESSAGES.LOGIN_USER);
     // Body Data
-    const userData = req.body;
     const { email, secretCodeClient } = req.body;
     // Checking required fields
     if (!email || !secretCodeClient) {
       throw new CustomError(CLIENT_MESSAGES.ERROR_MESSAGES.EMPTY_FIELD_ERROR);
     }
     // Response from the Service
-    const responseData = await UserServiceInstance.loginUser(userData, req);
-    // Closing Logs
-    console.log(LOGGER_MESSAGES.CONTROLLER + LOGGER_MESSAGES.LOGIN_COMPLETED);
+    const responseData = await UserServiceInstance.loginUser(req.body, req);
     // Sending Response to Client
-    sendToken(responseData, res);
+    sendToken(responseData, res, LOGGER_MESSAGES.CONTROLLER + LOGGER_MESSAGES.LOGIN_COMPLETED);
   } catch (error) {
     // Closing Logs
     console.log(LOGGER_MESSAGES.CONTROLLER + LOGGER_MESSAGES.LOGIN_FAILED);

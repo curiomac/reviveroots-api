@@ -10,6 +10,7 @@ const {
   getProducts,
   getProduct,
   deleteProduct,
+  updateProduct,
 } = require("../controllers/productController");
 const multer = require("multer");
 const path = require("path");
@@ -26,30 +27,37 @@ const upload = multer({
   }),
 });
 
-router.route("/create/product").post(
-  headerVerification,
-  isAuthenticatedUser,
-  authorizeRoles(
-    ROLES.SUPERVISOR,
-    ROLES.MANAGER,
-    ROLES.ADMIN,
-    ROLES.SUPREME_ADMIN
-  ),
-  upload.array("productImages"),
-  createProduct
-);
+router
+  .route("/create/product")
+  .post(
+    headerVerification,
+    isAuthenticatedUser,
+    authorizeRoles(
+      ROLES.SUPERVISOR,
+      ROLES.MANAGER,
+      ROLES.ADMIN,
+      ROLES.SUPREME_ADMIN
+    ),
+    upload.array("productImages"),
+    createProduct
+  );
+router
+  .route("/update/product")
+  .put(
+    headerVerification,
+    isAuthenticatedUser,
+    authorizeRoles(
+      ROLES.SUPERVISOR,
+      ROLES.MANAGER,
+      ROLES.ADMIN,
+      ROLES.SUPREME_ADMIN
+    ),
+    upload.array("updateProductImages"),
+    updateProduct
+  );
 
-router.route("/get/products").get(
-  headerVerification,
-  getProducts
-);
-router.route("/get/product").get(
-  headerVerification,
-  getProduct
-);
-router.route("/delete/product").delete(
-  headerVerification,
-  deleteProduct
-);
+router.route("/get/products").get(headerVerification, getProducts);
+router.route("/get/product").get(headerVerification, getProduct);
+router.route("/delete/product").delete(headerVerification, deleteProduct);
 
 module.exports = router;

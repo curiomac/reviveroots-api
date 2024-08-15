@@ -3,27 +3,77 @@ const RESPONSE = new HandleResponse();
 const HTTP_STATUS_CODES = require("../utils/httpStatusCodes");
 const CLIENT_MESSAGES = require("../utils/clientResponseConstants");
 const LOGGER_MESSAGES = require("../utils/logConstants");
-const CartService = require("../services/cartServices");
+const OrderService = require("../services/orderServices");
 const CustomError = require("../helpers/customError");
 
 // Creating a Service Instance
-const CartServiceInstance = CartService();
+const OrderServiceInstance = OrderService();
 
-// Add To Cart - /api/bytestation/v1/add/cart
-exports.addToCart = async (req, res, next) => {
+// Get Order Details - /api/bytestation/v1/get/order_details
+exports.getOrderDetails = async (req, res, next) => {
   try {
     // Initiating Logs
-    console.log(LOGGER_MESSAGES.ADD_TO_CART);
+    console.log(LOGGER_MESSAGES.ORDER_DETAILS_FETCH);
+    // Response from the Service
+    const responseData = await OrderServiceInstance.getOrderDetails(req);
+    // Closing Logs
+    console.log(LOGGER_MESSAGES.ORDER_DETAILS_FETCH_COMPLETED);
+    // Sending Response to Client
+    RESPONSE.handleSuccessResponse(
+      HTTP_STATUS_CODES.OK,
+      responseData.message,
+      responseData.data,
+      res
+    );
+  } catch (error) {
+    // Closing Logs
+    console.log(LOGGER_MESSAGES.ORDER_DETAILS_FETCH_FAILED);
+    // Logging Catched Error
+    console.log("Error: ", error);
+    // Sending Response to Client
+    RESPONSE.handleErrorResponse(
+      HTTP_STATUS_CODES.INTERNAL_SERVER_ERROR,
+      error.message,
+      res
+    );
+  }
+};
+
+// Create Order - /api/bytestation/v1/create/order
+exports.createOrder = async (req, res, next) => {
+  try {
+    // Initiating Logs
+    console.log(LOGGER_MESSAGES.ORDER_CREATION);
     // Body Data
-    const { productId } = req.body;
+    const {
+      email,
+      firstName,
+      postalCode,
+      mobileNumber,
+      addressLine1,
+      location,
+      district,
+      state,
+      country,
+    } = req.body;
     // Checking required fields
-    if (!productId) {
+    if (
+      !email ||
+      !firstName ||
+      !postalCode ||
+      !mobileNumber ||
+      !addressLine1 ||
+      !location ||
+      !district ||
+      !state ||
+      !country
+    ) {
       throw new CustomError(CLIENT_MESSAGES.ERROR_MESSAGES.EMPTY_FIELD_ERROR);
     }
     // Response from the Service
-    const responseData = await CartServiceInstance.addToCart(req.body, req);
+    const responseData = await OrderServiceInstance.createOrder(req.body, req);
     // Closing Logs
-    console.log(LOGGER_MESSAGES.ADD_TO_CART_COMPLETED);
+    console.log(LOGGER_MESSAGES.ORDER_CREATION_COMPLETED);
     // Sending Response to Client
     RESPONSE.handleSuccessResponse(
       HTTP_STATUS_CODES.OK,
@@ -33,7 +83,7 @@ exports.addToCart = async (req, res, next) => {
     );
   } catch (error) {
     // Closing Logs
-    console.log(LOGGER_MESSAGES.ADD_TO_CART_FAILED);
+    console.log(LOGGER_MESSAGES.ORDER_CREATION_FAILED);
     // Logging Catched Error
     console.log("Error: ", error);
     // Sending Response to Client
@@ -44,15 +94,22 @@ exports.addToCart = async (req, res, next) => {
     );
   }
 };
-// Get Cart Items - /api/bytestation/v1/get/cart
-exports.getCartItems = async (req, res, next) => {
+
+// Get Order - /api/bytestation/v1/get/order
+exports.getOrder = async (req, res, next) => {
   try {
     // Initiating Logs
-    console.log(LOGGER_MESSAGES.GET_CART_ITEMS);
+    console.log(LOGGER_MESSAGES.ORDER_FETCH);
+    // Body Data
+    const { order_id } = req.query;
+    // Checking required fields
+    if (!order_id) {
+      throw new CustomError(CLIENT_MESSAGES.ERROR_MESSAGES.EMPTY_FIELD_ERROR);
+    }
     // Response from the Service
-    const responseData = await CartServiceInstance.getCartItems(req);
+    const responseData = await OrderServiceInstance.getOrder(order_id, req);
     // Closing Logs
-    console.log(LOGGER_MESSAGES.GET_CART_ITEMS_COMPLETED);
+    console.log(LOGGER_MESSAGES.ORDER_DETAILS_FETCH_COMPLETED);
     // Sending Response to Client
     RESPONSE.handleSuccessResponse(
       HTTP_STATUS_CODES.OK,
@@ -62,36 +119,7 @@ exports.getCartItems = async (req, res, next) => {
     );
   } catch (error) {
     // Closing Logs
-    console.log(LOGGER_MESSAGES.GET_CART_ITEMS_FAILED);
-    // Logging Catched Error
-    console.log("Error: ", error);
-    // Sending Response to Client
-    RESPONSE.handleErrorResponse(
-      HTTP_STATUS_CODES.INTERNAL_SERVER_ERROR,
-      error.message,
-      res
-    );
-  }
-};
-// Get Checkout Details Items - /api/bytestation/v1/get/checkout_details
-exports.getCheckoutDetails = async (req, res, next) => {
-  try {
-    // Initiating Logs
-    console.log(LOGGER_MESSAGES.GET_CART_ITEMS);
-    // Response from the Service
-    const responseData = await CartServiceInstance.getCartItems(req);
-    // Closing Logs
-    console.log(LOGGER_MESSAGES.GET_CART_ITEMS_COMPLETED);
-    // Sending Response to Client
-    RESPONSE.handleSuccessResponse(
-      HTTP_STATUS_CODES.OK,
-      responseData.message,
-      responseData.data,
-      res
-    );
-  } catch (error) {
-    // Closing Logs
-    console.log(LOGGER_MESSAGES.GET_CART_ITEMS_FAILED);
+    console.log(LOGGER_MESSAGES.ORDER_DETAILS_FETCH_FAILED);
     // Logging Catched Error
     console.log("Error: ", error);
     // Sending Response to Client

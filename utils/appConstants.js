@@ -12,15 +12,28 @@ const COLLECTION_NAMES = {
   IDENTITY: "identity",
 };
 
+const PAYMENT_METHODS = {
+  COD: "COD",
+  UPI: "UPI",
+  CARD: "CARD-PAYMENT",
+};
+const PAYMENT_STATUS = {
+  PENDING: "pending",
+};
 const STATUS = {
   ACTIVE: "active",
   INACTIVE: "inActive",
   PENDING: "pending",
 };
+const SHIPMENT_STATUS = {
+  PROCESSING: "processing",
+  SHIPPED: "shipped",
+  DELIVERED: "delivered",
+};
 
 const ROLES = {
   USER: "user",
-  SUPERVISOR: 'supervisor',
+  SUPERVISOR: "supervisor",
   MANAGER: "manager",
   ADMIN: "admin",
   SUPREME_ADMIN: "supreme_admin",
@@ -38,12 +51,22 @@ const TOKEN = {
   PERFIX_TOKEN: "Bearer",
 };
 
+const API_ROUTES = {
+  ORDER_DETAILS: {
+    GET: "/get/order_details"
+  },
+}
+
 module.exports = {
   ERROR_MESSAGES,
   MESSAGES,
   DBCONNECTION,
   COLLECTION_NAMES,
   STATUS,
+  PAYMENT_METHODS,
   TOKEN,
-  ROLES
+  ROLES,
+  PAYMENT_STATUS,
+  API_ROUTES,
+  SHIPMENT_STATUS
 };

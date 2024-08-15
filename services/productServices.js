@@ -7,7 +7,7 @@ const moment = require("moment");
 
 const ProductService = () => {
   /**
-   * Product Creatioon
+   * Product Creation
    */
   const createProduct = async (productData, req) => {
     try {
@@ -23,7 +23,11 @@ const ProductService = () => {
         manufacturer,
         availableQuantity,
         maximumQuantity,
-      } = productData;
+      } = productData;      
+      const user = req.user;
+      if (!user) {
+        throw new CustomError(CLIENT_MESSAGES.ERROR_MESSAGES.USER_NOT_FOUND);
+      }
       // Verifing maximum quantity not greater than available qaunatity
       if (maximumQuantity > availableQuantity) {
         throw new CustomError(
@@ -86,14 +90,136 @@ const ProductService = () => {
         discountPrice: formattedSalePrice().discountPrice,
         ...(isAdditionalInfo && { manufacturer }),
         ...(isAdditionalInfo && { countryOfMade }),
+        createdBy: user?._id,
+        updatedBy: user?._id
       };
       // Creating product to DataBase
       const product = await Product.create(formattedProductData);
 
       // Returning Client Response to Controller
       return {
-        data: product,
+        data: { product },
         message: CLIENT_MESSAGES.SUCCESS_MESSAGES.PRODUCT_CREATION_SUCCESSFUL,
+      };
+    } catch (error) {
+      throw new CustomError(error.message);
+    }
+  };
+  /**
+   * Product Updating
+   */
+  const updateProduct = async (productData, req) => {
+    try {
+      // Product Data recieved from controller
+      let {
+        productId,
+        unitPrice,
+        profitPercentage,
+        isDiscountedProduct,
+        isAdditionalInfo,
+        discountPercentage,
+        discountStartDate,
+        countryOfMade,
+        manufacturer,
+        availableQuantity,
+        maximumQuantity,
+        productImages,
+      } = productData;
+      const user = req.user;
+      if (!user) {
+        throw new CustomError(CLIENT_MESSAGES.ERROR_MESSAGES.USER_NOT_FOUND);
+      }
+      console.log("user: ", user);
+      
+      const productFound = await Product.findById(productId);
+      if (!productFound) {
+        throw new CustomError(CLIENT_MESSAGES.ERROR_MESSAGES.PRODUCT_NOT_FOUND);
+      }
+      // Verifing maximum quantity not greater than available qaunatity
+      if (maximumQuantity > availableQuantity) {
+        throw new CustomError(
+          CLIENT_MESSAGES.ERROR_MESSAGES.MAX_QUANTITY_GREATER_AVAILABLE_QUANTITY
+        );
+      }
+      // Formating gross price from unit price and profit percentage
+      const formattedGrossPrice = () => {
+        let grossPrice = 0;
+        if (profitPercentage > 100) {
+          profitPercentage = 100;
+        }
+        const profitMargin = Number(profitPercentage) / 100;
+        const profitMarginPrice = Number(unitPrice) * Number(profitMargin);
+        grossPrice = Number(profitMarginPrice) + Number(unitPrice);
+        return grossPrice;
+      };
+      // Formating sale price discount percentage
+      const formattedSalePrice = () => {
+        let salePrice = 0;
+        let discountPrice = 0;
+        // Verifing is discounted product or not
+        if (isDiscountedProduct) {
+          if (discountPercentage > 100) {
+            discountPercentage = 100;
+          }
+          const discountMargin = Number(discountPercentage) / 100;
+          discountPrice =
+            Number(formattedGrossPrice()) * Number(discountMargin);
+          salePrice = Number(formattedGrossPrice()) - discountPrice;
+        } else {
+          salePrice = formattedGrossPrice();
+        }
+        return { salePrice, discountPrice };
+      };
+      // Verifing date is not before current date
+      if (isDiscountedProduct) {
+        const currentDate = new Date();
+        if (moment(discountStartDate).isBefore(currentDate)) {
+          throw new CustomError(
+            CLIENT_MESSAGES.ERROR_MESSAGES.DATE_BEFORE_CURRENT_DATE
+          );
+        }
+      }
+      // Handling Product Images
+      let productImagesArray = [];
+      if (req.files.length > 0) {
+        // Pushing Product Images to images Array
+        req.files.forEach((file) => {
+          let url = `${process.env.SERVER_URL}/uploads/product/${file.originalname}`;
+          productImagesArray.push({ url });
+        });
+      }
+
+      const productImagesUpdated = productFound.productImages.filter((image) =>
+        JSON.parse(productImages).some(
+          (data) => data._id === image._id.toString()
+        )
+      );
+
+      productImagesArray = [...productImagesUpdated, ...productImagesArray];
+
+      // Formating the products data after all validations
+      const formattedProductData = {
+        ...productData,
+        productImages: productImagesArray,
+        grossPrice: formattedGrossPrice(),
+        salePrice: formattedSalePrice().salePrice,
+        discountPrice: formattedSalePrice().discountPrice,
+        ...(isAdditionalInfo && { manufacturer }),
+        ...(isAdditionalInfo && { countryOfMade }),
+        updatedBy: user?._id
+      };
+      // throw new CustomError('error.message');
+      // Creating product to DataBase
+      const product = await Product.findByIdAndUpdate(
+        productId,
+        formattedProductData,
+        { new: true, upsert: true }
+      );
+
+      // Returning Client Response to Controller
+      return {
+        data: { product },
+        message: CLIENT_MESSAGES.SUCCESS_MESSAGES.PRODUCT_UPDATE_SUCCESSFUL,
       };
     } catch (error) {
       throw new CustomError(error.message);
@@ -224,6 +350,7 @@ const ProductService = () => {
    */
   return {
     createProduct,
+    updateProduct,
     getProducts,
     getProduct,
     deleteProduct,

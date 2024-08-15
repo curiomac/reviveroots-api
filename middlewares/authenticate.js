@@ -17,7 +17,7 @@ exports.isAuthenticatedUser = async (req, res, next) => {
       return;
     }
     const decoded = jwt.verify(authorization, process.env.JWT_SECRET);
-    req.user = await User.findById(decoded.id);
+    req.user = await User.findById(decoded.id);    
     if (!req.user) {
       RESPONSE.handleErrorResponse(
         HTTP_STATUS_CODES.UNAUTHORIZED,

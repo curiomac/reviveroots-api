@@ -33,6 +33,9 @@ const productSchema = new mongoose.Schema({
       type: String,
       // required: [true, "Please enter Weight of the Product"],
     },
+    gst: {
+      type: String,
+    }
   },
   productTags: {
     type: Array,
@@ -94,6 +97,10 @@ const productSchema = new mongoose.Schema({
     type: String,
     default: "0",
   },
+  deliveryWithinLocal: {
+    type: String,
+    default: "0",
+  },
   deliveryWithinDistrict: {
     type: String,
     default: "0",
@@ -119,12 +126,12 @@ const productSchema = new mongoose.Schema({
     type: String,
     default: "0",
   },
-  productSchedule: {
-    feedDate: {
-      type: Date,
-      required: true,
-    },
-  },
+  // productSchedule: {
+  //   feedDate: {
+  //     type: Date,
+  //     required: true,
+  //   },
+  // },
   verifiedPurchasUsers: [
     {
       userId: {
@@ -167,6 +174,9 @@ const productSchema = new mongoose.Schema({
   updatedAt: {
     type: Date,
     default: Date.now,
+  },
+  updatedBy: {
+    type: mongoose.Schema.Types.ObjectId,
   },
 });
 

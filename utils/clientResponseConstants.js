@@ -1,8 +1,11 @@
 const CLIENT_MESSAGES = {
   SUCCESS_MESSAGES: {
     PRODUCT_CREATION_SUCCESSFUL: "Product created successfully.",
+    PRODUCT_UPDATE_SUCCESSFUL: "Product updated successfully.",
     PRODUCTS_FETCH_SUCCESSFUL: "Products fetched successfully.",
     PRODUCT_FETCH_SUCCESSFUL: "Product fetched successfully.",
+    ORDER_DETAILS_FETCH_SUCCESSFUL: "Order details fetched successfully.",
+    ORDER_CREATION_SUCCESSFUL: "Order created successfully.",
     PRODUCT_DELETE_SUCCESSFUL: "Product deleted successfully.",
     LOGIN_SUCCESSFUL: "Logged in successfully.",
     REGISTERATION_SUCCESSFUL: "Registered successfully.",
@@ -39,10 +42,15 @@ const CLIENT_MESSAGES = {
     URL_NOT_FOUND: "The requested resource could not be found on the server.",
     AUTHENTICATION_ERROR: "Login first to handle this resource",
     PRODUCT_CREATION_FAILED: "Product creation failed.",
+    PRODUCT_UPDATE_FAILED: "Product updating failed.",
     PRODUCTS_FETCH_FAILED: "Products fetching failed.",
     PRODUCT_FETCH_FAILED: "Product fetching failed.",
+    ORDER_DETAILS_FETCH_FAILED: "Order details fetching failed.",
+    ORDER_CREATION_FAILED: "Order creation failed.",
     PRODUCT_NOT_FOUND:
       "Product not found. Please verify the entered Product Id or contact support for assistance.",
+    ORDER_NOT_FOUND:
+      "Order not found. Please verify the entered Product Id or contact support for assistance.",
     USER_REGISTERAION_FAILED: "User registeration failed.",
     LOGIN_FAILED: "User login failed.",
     EMPTY_FIELD_ERROR: "Please provide all the required fields.",
@@ -52,7 +60,8 @@ const CLIENT_MESSAGES = {
       "Max Quantity must not be greater thaan the Available Quantity.",
     PRODUCT_ALREADY_IN_CART: "Product is already in the cart.",
     PRODUCT_NOT_IN_CART: "Product is not found in the cart.",
-    CART_NOT_FOUND: "Cart not found. Please verify the entered Id or contact support for assistance.",
+    CART_NOT_FOUND:
+      "Cart not found. Please verify the entered Id or contact support for assistance.",
   },
 };
 

@@ -39,7 +39,6 @@ const cartSchema = new mongoose.Schema({
   },
   checkoutPrice: {
     type: String,
-    required: true,
   },
   createdAt: {
     type: Date,

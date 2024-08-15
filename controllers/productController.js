@@ -15,7 +15,6 @@ exports.createProduct = async (req, res, next) => {
     // Initiating Logs
     console.log(LOGGER_MESSAGES.PRODUCT_CREATION);
     // Body Data
-    const productData = req.body;
     const {
       productName,
       alternateName,
@@ -37,7 +36,7 @@ exports.createProduct = async (req, res, next) => {
     }
     // Response from the Service
     const responseData = await ProductServiceInstance.createProduct(
-      productData,
+      req.body,
       req
     );
     // Closing Logs
@@ -52,6 +51,59 @@ exports.createProduct = async (req, res, next) => {
   } catch (error) {
     // Closing Logs
     console.log(LOGGER_MESSAGES.PRODUCT_CREATION_FAILED);
+    // Logging Catched Error
+    console.log("Error: ", error);
+    // Sending Response to Client
+    RESPONSE.handleErrorResponse(
+      HTTP_STATUS_CODES.INTERNAL_SERVER_ERROR,
+      error.message,
+      res
+    );
+  }
+};
+
+// Update Product - /api/bytestation/v1/update/product
+exports.updateProduct = async (req, res, next) => {
+  try {
+    // Initiating Logs
+    console.log(LOGGER_MESSAGES.PRODUCT_UPDATE);
+    // Body Data
+    const {
+      productName,
+      alternateName,
+      description,
+      subDescription,
+      unitPrice,
+      profitPercentage,
+    } = req.body;
+    // Checking required fields
+    if (
+      !productName ||
+      !alternateName ||
+      !description ||
+      !subDescription ||
+      !unitPrice ||
+      !profitPercentage
+    ) {
+      throw new CustomError(CLIENT_MESSAGES.ERROR_MESSAGES.EMPTY_FIELD_ERROR);
+    }
+    // Response from the Service
+    const responseData = await ProductServiceInstance.updateProduct(
+      req.body,
+      req
+    );
+    // Closing Logs
+    console.log(LOGGER_MESSAGES.PRODUCT_UPDATE_COMPLETED);
+    // Sending Response to Client
+    RESPONSE.handleSuccessResponse(
+      HTTP_STATUS_CODES.OK,
+      responseData.message,
+      responseData.data,
+      res
+    );
+  } catch (error) {
+    // Closing Logs
+    console.log(LOGGER_MESSAGES.PRODUCT_UPDATE_FAILED);
     // Logging Catched Error
     console.log("Error: ", error);
     // Sending Response to Client

@@ -118,6 +118,7 @@ const CartService = () => {
         );
         return totalSalePrice;
       };
+      console.log("getCheckoutPrice: ", getCheckoutPrice);
 
       const cartValue = await Cart.findOneAndUpdate(
         { userId },
@@ -129,10 +130,24 @@ const CartService = () => {
         },
         { new: true, upsert: true }
       );
-
+      const productsIdsInCart = await Promise.all(
+        cartValue.productsIdsInCart.map(async (data) => {
+          const product = await Product.findById(data.productId);
+          if (!product) {
+            throw new CustomError(
+              CLIENT_MESSAGES.ERROR_MESSAGES.PRODUCT_NOT_FOUND
+            );
+          }
+          return {
+            ...data?._doc,
+            productImages: product?.productImages,
+            productName: product?.productName,
+          };
+        })
+      ).then((result) => result.reverse());
       // Returning client response to controller
       return {
-        data: { cart: cartValue },
+        data: { cart: { ...cartValue._doc, productsIdsInCart } },
         message: CLIENT_MESSAGES.SUCCESS_MESSAGES.ADD_TO_CART_SUCCESSFUL,
       };
     } catch (error) {
@@ -189,7 +204,7 @@ const CartService = () => {
         return totalSalePrice;
       };
 
-      const cart = await Cart.findOneAndUpdate(
+      const cartValue = await Cart.findOneAndUpdate(
         { userId },
         {
           $set: {
@@ -199,9 +214,25 @@ const CartService = () => {
         },
         { new: true, upsert: true }
       );
+
+      const productsIdsInCart = await Promise.all(
+        cartValue.productsIdsInCart.map(async (data) => {
+          const product = await Product.findById(data.productId);
+          if (!product) {
+            throw new CustomError(
+              CLIENT_MESSAGES.ERROR_MESSAGES.PRODUCT_NOT_FOUND
+            );
+          }
+          return {
+            ...data?._doc,
+            productImages: product?.productImages,
+            productName: product?.productName,
+          };
+        })
+      ).then((result) => result.reverse());
       // Returning client response to controller
       return {
-        data: { cart },
+        data: { cart: { ...cartValue._doc, productsIdsInCart } },
         message: CLIENT_MESSAGES.SUCCESS_MESSAGES.CART_ITEMS_FETCH_SUCCESSFUL,
       };
     } catch (error) {
@@ -224,7 +255,7 @@ const CartService = () => {
       if (!cart) {
         throw new CustomError(CLIENT_MESSAGES.ERROR_MESSAGES.CART_NOT_FOUND);
       }
-      
+
       // Returning client response to controller
       return {
         data: {
