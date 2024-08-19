@@ -233,6 +233,7 @@ const OrderService = () => {
         orderSummary: orderDetailsResponse?.orderSummary,
         shippingAddress: formattedShippingAddress,
       };
+      
       const orderDetails = await Order.create(formattedOrderData);
 
       if (orderDetails) {

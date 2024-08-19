@@ -12,7 +12,7 @@ const CartService = () => {
   const addToCart = async (cartData, req) => {
     try {
       // Cart Data received from controller
-      const { action, productId } = cartData;
+      const { action, productId, quantity } = cartData;
 
       const userId = req?.user?.id;
 
@@ -30,6 +30,7 @@ const CartService = () => {
         productId: product._id,
         onAddSalePrice: product.salePrice,
         currentSalePrice: product.salePrice,
+        quantity: quantity ? quantity : 1,
       };
 
       const isCartFound = await Cart.findOne({ userId });
@@ -76,7 +77,8 @@ const CartService = () => {
 
           if (productAlreadyInCart) {
             // Increment the quantity of the existing product
-            const newQuantity = Number(productAlreadyInCart.quantity) + 1;
+            const newQuantity =
+              Number(productAlreadyInCart.quantity) + (quantity ? quantity : 1);
             updatedCart = await Cart.findOneAndUpdate(
               { userId, "productsIdsInCart.productId": productId },
               {
