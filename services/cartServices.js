@@ -13,7 +13,6 @@ const CartService = () => {
     try {
       // Cart Data received from controller
       const { action, productId } = cartData;
-      console.log("req.user: ", req.user);
 
       const userId = req?.user?.id;
 
@@ -118,7 +117,6 @@ const CartService = () => {
         );
         return totalSalePrice;
       };
-      console.log("getCheckoutPrice: ", getCheckoutPrice);
 
       const cartValue = await Cart.findOneAndUpdate(
         { userId },

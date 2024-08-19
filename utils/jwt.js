@@ -3,7 +3,7 @@ const HTTP_STATUS_CODES = require("../utils/httpStatusCodes");
 const RESPONSE = new HandleResponse();
 
 const sendToken = (responseData, res, logMsg) => {
-  const user = responseData.data;
+  const user = responseData.data?.user;
   const jwt_token = user.getJwtToken();
 
   // Closing Logs

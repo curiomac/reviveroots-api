@@ -16,9 +16,9 @@ exports.sendSecretCode = async (req, res) => {
     // Initiating Logs
     console.log(LOGGER_MESSAGES.CONTROLLER + LOGGER_MESSAGES.SECRET_CODE_SEND);
     // Body data
-    const { email, authCode } = req.body;
+    const { email } = req.body;
     // Checking required fields
-    if (!email || !authCode) {
+    if (!email) {
       throw new CustomError(CLIENT_MESSAGES.ERROR_MESSAGES.EMPTY_FIELD_ERROR);
     }
     // Response from the Service
@@ -34,7 +34,7 @@ exports.sendSecretCode = async (req, res) => {
     RESPONSE.handleSuccessResponse(
       HTTP_STATUS_CODES.OK,
       responseData.message,
-      {},
+      responseData.data,
       res
     );
   } catch (error) {
@@ -42,7 +42,7 @@ exports.sendSecretCode = async (req, res) => {
     console.log(
       LOGGER_MESSAGES.CONTROLLER + LOGGER_MESSAGES.SECRET_CODE_SEND_FAILED
     );
-     // Sending Response to Client
+    // Sending Response to Client
     RESPONSE.handleErrorResponse(
       HTTP_STATUS_CODES.BAD_REQUEST,
       error.message,
@@ -57,15 +57,19 @@ exports.registerUser = async (req, res, next) => {
     // Initiating Logs
     console.log(LOGGER_MESSAGES.CONTROLLER + LOGGER_MESSAGES.REGISTER_USER);
     // Body Data
-    const { firstName, mobileNumber, email, secretCodeClient } = req.body;
+    const { email, secretCodeClient } = req.body;
     // Checking required fields
-    if (!email || !firstName || !mobileNumber || !secretCodeClient) {
+    if (!email || !secretCodeClient) {
       throw new CustomError(CLIENT_MESSAGES.ERROR_MESSAGES.EMPTY_FIELD_ERROR);
     }
     // Response from the Service
     const responseData = await UserServiceInstance.registerUser(req.body, req);
     // Sending Response to Client
-    sendToken(responseData, res, LOGGER_MESSAGES.CONTROLLER + LOGGER_MESSAGES.REGISTER_USER_COMPLETED);
+    sendToken(
+      responseData,
+      res,
+      LOGGER_MESSAGES.CONTROLLER + LOGGER_MESSAGES.REGISTER_USER_COMPLETED
+    );
   } catch (error) {
     // Closing Logs
     console.log(
@@ -95,7 +99,11 @@ exports.loginUser = async (req, res, next) => {
     // Response from the Service
     const responseData = await UserServiceInstance.loginUser(req.body, req);
     // Sending Response to Client
-    sendToken(responseData, res, LOGGER_MESSAGES.CONTROLLER + LOGGER_MESSAGES.LOGIN_COMPLETED);
+    sendToken(
+      responseData,
+      res,
+      LOGGER_MESSAGES.CONTROLLER + LOGGER_MESSAGES.LOGIN_COMPLETED
+    );
   } catch (error) {
     // Closing Logs
     console.log(LOGGER_MESSAGES.CONTROLLER + LOGGER_MESSAGES.LOGIN_FAILED);

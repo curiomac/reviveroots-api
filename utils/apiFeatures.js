@@ -28,6 +28,9 @@ class APIFeatures {
       if (key === "product_status") {
         const formattedArray = value.split(",");
         queryObj["productStatus"] = { $in: formattedArray };
+      } else if (key === "product_category") {
+        const formattedArray = value.split(",");
+        queryObj["productCategory"] = { $in: formattedArray };
       }
     }
     this.query.find(queryObj);

@@ -129,7 +129,6 @@ const ProductService = () => {
       if (!user) {
         throw new CustomError(CLIENT_MESSAGES.ERROR_MESSAGES.USER_NOT_FOUND);
       }
-      console.log("user: ", user);
       
       const productFound = await Product.findById(productId);
       if (!productFound) {

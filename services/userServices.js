@@ -20,20 +20,20 @@ const UserService = () => {
    */
   const sendSecretCode = async (userData, req) => {
     try {
-      const { email, authCode, reSendOTP } = userData;
+      const { email, reSendCode } = userData;
+      let authCode = "0";
 
       await SecretCode.deleteMany({ expirationTime: { $lt: new Date() } });
       // if (!email) {
       //   return next(new ErrorHandler("Please enter an email", 400));
       // }
       const user = await User.findOne({ email });
-      if (!user && authCode === "0") {
-        throw new CustomError(CLIENT_MESSAGES.ERROR_MESSAGES.USER_NOT_FOUND);
+      if (user) {
+        authCode = "0";
+      } else {
+        authCode = "1";
       }
-      if (user && authCode === "1") {
-        throw new CustomError(CLIENT_MESSAGES.ERROR_MESSAGES.EXISTING_USER);
-      }
-      if (reSendOTP) {
+      if (reSendCode) {
         await SecretCode.deleteOne({ email });
       }
       const codeFound = await SecretCode.findOne({ email });
@@ -47,7 +47,7 @@ const UserService = () => {
         authCode,
       };
 
-      await SecretCode.create(verificationData);
+      const secretCode = await SecretCode.create(verificationData);
 
       const htmlTemplate = readHTMLTemplate(
         path.join(__dirname, "..", "ui/secretCodeEmailTemplate.htm"),
@@ -64,11 +64,14 @@ const UserService = () => {
         subject: "Email verification",
         message: htmlTemplate,
       });
-      console.log(`[SECTRET_CODE][${email}]: ${SECRET_CODE}`);
+      console.log(`[SECTRET_CODE][${email}]: [${SECRET_CODE}]`);
 
       // Update the user's status to ACTIVE since verification is successful
       // await findByIdAndUpdateUser({ _id: user_id }, { status: STATUS.ACTIVE });
-      return { message: CLIENT_MESSAGES.SUCCESS_MESSAGES.CODE_SENT_SUCCESSFUL };
+      return {
+        message: CLIENT_MESSAGES.SUCCESS_MESSAGES.CODE_SENT_SUCCESSFUL,
+        data: { authCode, expirationTime: secretCode?.expirationTime },
+      };
     } catch (error) {
       throw new CustomError(error.message);
     }
@@ -84,7 +87,6 @@ const UserService = () => {
       if (!verificationData) {
         throw new CustomError(CLIENT_MESSAGES.ERROR_MESSAGES.CODE_INVALID);
       }
-      console.log("verificationData: ", verificationData);
       if (verificationData.authCode !== "1") {
         throw new CustomError(CLIENT_MESSAGES.ERROR_MESSAGES.CODE_INVALID);
       }
@@ -106,7 +108,7 @@ const UserService = () => {
 
       // Returning Client Response to Controller
       return {
-        data: user,
+        data: { user },
         message: CLIENT_MESSAGES.SUCCESS_MESSAGES.REGISTERATION_SUCCESSFUL,
       };
     } catch (error) {
@@ -120,6 +122,7 @@ const UserService = () => {
     try {
       const { email, secretCodeClient } = loginCredentials;
       const verificationData = await SecretCode.findOne({ email });
+
       if (!verificationData) {
         throw new CustomError(CLIENT_MESSAGES.ERROR_MESSAGES.CODE_INVALID);
       }
@@ -132,6 +135,7 @@ const UserService = () => {
         await SecretCode.deleteOne({ email });
         throw new CustomError(CLIENT_MESSAGES.ERROR_MESSAGES.CODE_EXPIRED);
       }
+
       if (verificationData.secretCode !== secretCodeClient) {
         throw new CustomError(CLIENT_MESSAGES.ERROR_MESSAGES.CODE_INVALID);
       }
@@ -147,7 +151,7 @@ const UserService = () => {
 
       // Returning Client Response to Controller
       return {
-        data: user,
+        data: { user },
         message: CLIENT_MESSAGES.SUCCESS_MESSAGES.LOGIN_SUCCESSFUL,
       };
     } catch (error) {
@@ -165,7 +169,7 @@ const UserService = () => {
       }
       // Returning Client Response to Controller
       return {
-        data: user,
+        data: { user },
         message: CLIENT_MESSAGES.SUCCESS_MESSAGES.PROFILE_FETCHED_SUCCESSFUL,
       };
     } catch (error) {
