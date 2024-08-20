@@ -64,7 +64,7 @@ const UserService = () => {
       );
       sendEmail({
         email,
-        subject: "Email verification",
+        subject: "Email Verification",
         message: htmlTemplate,
       });
       console.log(`[SECTRET_CODE][${email}]: [${SECRET_CODE}]`);
