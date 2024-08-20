@@ -37,7 +37,10 @@ const UserService = () => {
         await SecretCode.deleteOne({ email });
       }
       const codeFound = await SecretCode.findOne({ email });
-      if (codeFound) {
+      if (
+        false
+        // codeFound
+      ) {
         throw new CustomError(CLIENT_MESSAGES.ERROR_MESSAGES.CODE_ALREADY_SENT);
       }
 
