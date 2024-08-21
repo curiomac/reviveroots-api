@@ -121,12 +121,12 @@ exports.loginUser = async (req, res, next) => {
 exports.getProfile = async (req, res, next) => {
   try {
     // Initiating Logs
-    console.log(LOGGER_MESSAGES.CONTROLLER + LOGGER_MESSAGES.PRODUCTS_FETCH);
+    console.log(LOGGER_MESSAGES.CONTROLLER + LOGGER_MESSAGES.PROFILE_FETCH);
     // Response from the Service
     const responseData = await UserServiceInstance.getProfile(req);
     // Closing Logs
     console.log(
-      LOGGER_MESSAGES.CONTROLLER + LOGGER_MESSAGES.PRODUCTS_FETCH_COMPLETED
+      LOGGER_MESSAGES.CONTROLLER + LOGGER_MESSAGES.PROFILE_FETCH_COMPLETED
     );
     // Sending Response to Client
     RESPONSE.handleSuccessResponse(
@@ -138,7 +138,46 @@ exports.getProfile = async (req, res, next) => {
   } catch (error) {
     // Closing Logs
     console.log(
-      LOGGER_MESSAGES.CONTROLLER + LOGGER_MESSAGES.PRODUCTS_FETCH_FAILED
+      LOGGER_MESSAGES.CONTROLLER + LOGGER_MESSAGES.PROFILE_FETCH_FAILED
+    );
+    // Logging Catched Error
+    console.log(LOGGER_MESSAGES.CONTROLLER + error);
+    // Sending Response to Client
+    RESPONSE.handleErrorResponse(
+      HTTP_STATUS_CODES.INTERNAL_SERVER_ERROR,
+      error,
+      res
+    );
+  }
+};
+// update profile - /api/v1/update/profile
+exports.updateProfile = async (req, res, next) => {
+  try {
+    // Initiating Logs
+    console.log(LOGGER_MESSAGES.CONTROLLER + LOGGER_MESSAGES.PROFILE_UPDATE);
+    // Body Data
+    const { email } = req.body;
+    // Checking required fields
+    if (!email) {
+      throw new CustomError(CLIENT_MESSAGES.ERROR_MESSAGES.EMPTY_FIELD_ERROR);
+    }
+    // Response from the Service
+    const responseData = await UserServiceInstance.updateProfile(req.body, req);
+    // Closing Logs
+    console.log(
+      LOGGER_MESSAGES.CONTROLLER + LOGGER_MESSAGES.PROFILE_UPDATE_COMPLETED
+    );
+    // Sending Response to Client
+    RESPONSE.handleSuccessResponse(
+      HTTP_STATUS_CODES.OK,
+      responseData.message,
+      responseData.data,
+      res
+    );
+  } catch (error) {
+    // Closing Logs
+    console.log(
+      LOGGER_MESSAGES.CONTROLLER + LOGGER_MESSAGES.PROFILE_UPDATE_FAILED
     );
     // Logging Catched Error
     console.log(LOGGER_MESSAGES.CONTROLLER + error);

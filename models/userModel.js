@@ -24,6 +24,11 @@ const userSchema = new mongoose.Schema({
     unique: true,
     validate: [validator.isEmail, "Please enter valid email address"],
   },
+  alternateEmail: {
+    type: String,
+    unique: true,
+    validate: [validator.isEmail, "Please enter valid email address"],
+  },
   avatar: {
     type: String,
   },

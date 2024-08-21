@@ -19,6 +19,9 @@ const LOGGER_MESSAGES = {
   PROFILE_FETCH: "Fetch profile function initiated",
   PROFILE_FETCH_COMPLETED: "Fetch profile function completed.",
   PROFILE_FETCH_FAILED: "Fetch profile function failed.",
+  PROFILE_UPDATE: "Update profile function initiated",
+  PROFILE_UPDATE_COMPLETED: "Update profile function completed.",
+  PROFILE_UPDATE_FAILED: "Update profile function failed.",
   EMAIL_SEND: "Email send successful",
   EMAIL_SEND_FAILED: "Email send failed",
   INVALID_EMAIL_OR_PASSWORD:
@@ -41,6 +44,11 @@ const LOGGER_MESSAGES = {
   PRODUCTS_FETCH: "Products fetching function initiated.",
   PRODUCTS_FETCH_COMPLETED: "Products fetching function completed.",
   PRODUCTS_FETCH_FAILED: "Products fetching function failed.",
+  QUICK_BUY_PRODUCTS_FETCH: "Quick buy Products fetching function initiated.",
+  QUICK_BUY_PRODUCTS_FETCH_COMPLETED:
+    "Quick buy Products fetching function completed.",
+  QUICK_BUY_PRODUCTS_FETCH_FAILED:
+    "Quick buy Products fetching function failed.",
   PRODUCT_FETCH: "Product fetching function initiated.",
   PRODUCT_FETCH_COMPLETED: "Product fetching function completed.",
   PRODUCT_FETCH_FAILED: "Product fetching function failed.",

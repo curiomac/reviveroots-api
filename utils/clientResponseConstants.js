@@ -10,6 +10,7 @@ const CLIENT_MESSAGES = {
     LOGIN_SUCCESSFUL: "Logged in successfully.",
     REGISTERATION_SUCCESSFUL: "Registered successfully.",
     PROFILE_FETCHED_SUCCESSFUL: "Profile fetched successfully.",
+    PROFILE_UPDATED_SUCCESSFUL: "Profile updated successfully.",
     ADD_TO_CART_SUCCESSFUL: "Item added to the cart successfully.",
     CART_ITEMS_FETCH_SUCCESSFUL: "Cart items fetched successfully.",
     CODE_SENT_SUCCESSFUL:

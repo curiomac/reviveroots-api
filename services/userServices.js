@@ -161,6 +161,9 @@ const UserService = () => {
       throw new CustomError(error.message);
     }
   };
+  /*
+   * User Profile Fetch
+   */
   const getProfile = async (req) => {
     try {
       // Creating user to DataBase
@@ -179,6 +182,51 @@ const UserService = () => {
       throw new CustomError(error.message);
     }
   };
+  /*
+   * User Profile Update
+   */
+  const updateProfile = async (userData, req) => {
+    try {
+      console.log("userData: ", userData);
+
+      const {
+        firstName,
+        lastName,
+        email,
+        alternateEmail,
+        mobileNumber,
+        alternateMobileNumber,
+      } = userData;
+
+      // Creating user to DataBase
+      const user = await User.findById(req.user.id);
+
+      if (!user) {
+        // Closing Logs
+        throw new CustomError(CLIENT_MESSAGES.ERROR_MESSAGES.USER_NOT_FOUND);
+      }
+      const formattedUser = {
+        firstName,
+        lastName,
+        email,
+        alternateEmail,
+        mobileNumber,
+        alternateMobileNumber,
+      };
+      const updatedUser = await User.findByIdAndUpdate(
+        req.user.id,
+        formattedUser,
+        { new: true, upsert: true }
+      );
+      // Returning Client Response to Controller
+      return {
+        data: { user: updatedUser },
+        message: CLIENT_MESSAGES.SUCCESS_MESSAGES.PROFILE_UPDATED_SUCCESSFUL,
+      };
+    } catch (error) {
+      throw new CustomError(error.message);
+    }
+  };
   /**
    * Returning Services to Controller
    */
@@ -187,6 +235,7 @@ const UserService = () => {
     registerUser,
     loginUser,
     getProfile,
+    updateProfile,
   };
 };
 
