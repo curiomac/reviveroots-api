@@ -8,6 +8,9 @@ const user = require("./routes/user");
 const product = require("./routes/product");
 const cart = require("./routes/cart");
 const order = require("./routes/order");
+const address = require("./routes/address");
+const dotenv = require('dotenv');
+dotenv.config({ path: 'config/config.env' });
 
 const corsOptions = {
   origin: true,
@@ -26,13 +29,14 @@ app.use(cors(corsOptions));
 app.use(express.json());
 app.use(cookieParser());
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
-// const BASE_URL = process.env.BASE_URL;
-const BASE_URL = "/api/bytestation/v1";
+
+const BASE_URL = process.env.BASE_URL;
 
 app.use(BASE_URL, user);
 app.use(BASE_URL, product);
 app.use(BASE_URL, cart);
 app.use(BASE_URL, order);
+app.use(BASE_URL, address);
 
 app.use(errorMiddleware);
 

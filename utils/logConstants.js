@@ -22,6 +22,18 @@ const LOGGER_MESSAGES = {
   PROFILE_UPDATE: "Update profile function initiated",
   PROFILE_UPDATE_COMPLETED: "Update profile function completed.",
   PROFILE_UPDATE_FAILED: "Update profile function failed.",
+  ADDRESS_CREATION: "Address creation function initiated.",
+  ADDRESS_CREATION_COMPLETED: "Address creation function completed.",
+  ADDRESS_CREATION_FAILED: "Address creation function failed.",
+  ADDRESS_UPDATE: "Update address function initiated.",
+  ADDRESS_UPDATE_COMPLETED: "Update address function completed.",
+  ADDRESS_UPDATE_FAILED: "Update address function failed.",
+  ADDRESSES_FETCH: "Fetch addresses function initiated.",
+  ADDRESSES_FETCH_COMPLETED: "Fetch addresses function completed.",
+  ADDRESSES_FETCH_FAILED: "Fetch addresses function failed.",
+  ADDRESS_DELETE: "Address deleting function initiated.",
+  ADDRESS_DELETE_COMPLETED: "Address deleting function completed.",
+  ADDRESS_DELETE_FAILED: "Address deleting function failed.",
   EMAIL_SEND: "Email send successful",
   EMAIL_SEND_FAILED: "Email send failed",
   INVALID_EMAIL_OR_PASSWORD:
@@ -44,6 +56,18 @@ const LOGGER_MESSAGES = {
   PRODUCTS_FETCH: "Products fetching function initiated.",
   PRODUCTS_FETCH_COMPLETED: "Products fetching function completed.",
   PRODUCTS_FETCH_FAILED: "Products fetching function failed.",
+  CATEGORY_PRODUCTS_FETCH: "Category Products fetching function initiated.",
+  CATEGORY_PRODUCTS_FETCH_COMPLETED:
+    "Category Products fetching function completed.",
+  CATEGORY_PRODUCTS_FETCH_FAILED: "Category Products fetching function failed.",
+  RECENT_PRODUCTS_FETCH: "Recent Products fetching function initiated.",
+  RECENT_PRODUCTS_FETCH_COMPLETED:
+    "Recent Products fetching function completed.",
+  RECENT_PRODUCTS_FETCH_FAILED: "Recent Products fetching function failed.",
+  SIMILAR_PRODUCTS_FETCH: "Similar Products fetching function initiated.",
+  SIMILAR_PRODUCTS_FETCH_COMPLETED:
+    "Similar Products fetching function completed.",
+  SIMILAR_PRODUCTS_FETCH_FAILED: "Similar Products fetching function failed.",
   QUICK_BUY_PRODUCTS_FETCH: "Quick buy Products fetching function initiated.",
   QUICK_BUY_PRODUCTS_FETCH_COMPLETED:
     "Quick buy Products fetching function completed.",

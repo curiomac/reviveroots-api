@@ -27,7 +27,7 @@ router.route("/create/user").post(headerVerification, registerUser);
 router.route("/login").post(headerVerification, loginUser);
 router
   .route("/update/profile")
-  .post(headerVerification, isAuthenticatedUser, updateProfile);
+  .put(headerVerification, isAuthenticatedUser, updateProfile);
 router
   .route("/get/profile")
   .get(headerVerification, isAuthenticatedUser, getProfile);

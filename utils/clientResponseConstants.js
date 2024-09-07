@@ -3,15 +3,22 @@ const CLIENT_MESSAGES = {
     PRODUCT_CREATION_SUCCESSFUL: "Product created successfully.",
     PRODUCT_UPDATE_SUCCESSFUL: "Product updated successfully.",
     PRODUCTS_FETCH_SUCCESSFUL: "Products fetched successfully.",
+    CATEGORY_PRODUCTS_FETCH_SUCCESSFUL: "Category Products fetched successfully.",
+    RECENT_PRODUCTS_FETCH_SUCCESSFUL: "Recent Products fetched successfully.",
+    SIMILAR_PRODUCTS_FETCH_SUCCESSFUL: "Similar Products fetched successfully.",
     PRODUCT_FETCH_SUCCESSFUL: "Product fetched successfully.",
     ORDER_DETAILS_FETCH_SUCCESSFUL: "Order details fetched successfully.",
     ORDER_CREATION_SUCCESSFUL: "Order created successfully.",
+    ADDRESS_CREATION_SUCCESSFUL: "Address created successfully.",
+    ADDRESS_UPDATE_SUCCESSFUL: "Address updated successfully.",
+    ADDRESSES_FETCH_SUCCESSFUL: "Addresses fetched successfully.",
+    ADDRESS_DELETE_SUCCESSFUL: "Address deleted successfully.",
     PRODUCT_DELETE_SUCCESSFUL: "Product deleted successfully.",
     LOGIN_SUCCESSFUL: "Logged in successfully.",
     REGISTERATION_SUCCESSFUL: "Registered successfully.",
     PROFILE_FETCHED_SUCCESSFUL: "Profile fetched successfully.",
     PROFILE_UPDATED_SUCCESSFUL: "Profile updated successfully.",
-    ADD_TO_CART_SUCCESSFUL: "Item added to the cart successfully.",
+    ADD_TO_CART_SUCCESSFUL: "Item added to the cart and ready for checkout whenever you're ready.",
     CART_ITEMS_FETCH_SUCCESSFUL: "Cart items fetched successfully.",
     CODE_SENT_SUCCESSFUL:
       "Secret code sent successfully. Please check your inbox for instructions.",
@@ -50,6 +57,8 @@ const CLIENT_MESSAGES = {
     ORDER_CREATION_FAILED: "Order creation failed.",
     PRODUCT_NOT_FOUND:
       "Product not found. Please verify the entered Product Id or contact support for assistance.",
+    ADDRESS_NOT_FOUND:
+      "Address not found. Please verify the entered Product Id or contact support for assistance.",
     ORDER_NOT_FOUND:
       "Order not found. Please verify the entered Product Id or contact support for assistance.",
     USER_REGISTERAION_FAILED: "User registeration failed.",

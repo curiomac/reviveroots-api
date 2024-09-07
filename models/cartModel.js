@@ -11,6 +11,10 @@ const cartSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         required: true,
       },
+      selectedSize: {
+        type: String,
+        required: true,
+      },
       quantity: {
         type: String,
         default: "1",

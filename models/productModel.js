@@ -35,7 +35,7 @@ const productSchema = new mongoose.Schema({
     },
     gst: {
       type: String,
-    }
+    },
   },
   productTags: {
     type: Array,
@@ -55,6 +55,10 @@ const productSchema = new mongoose.Schema({
   availableQuantity: {
     type: String,
     default: "0",
+  },
+  availableSizes: {
+    type: Array,
+    required: [true, "Please enter the Available Sizes"],
   },
   minimumQuantity: {
     type: String,
@@ -120,7 +124,7 @@ const productSchema = new mongoose.Schema({
   productStatus: {
     type: String,
     enum: [STATUS.ACTIVE, STATUS.INACTIVE, STATUS.PENDING],
-    default: STATUS.PENDING,
+    default: STATUS.ACTIVE,
   },
   aggregateRating: {
     type: String,

@@ -1,7 +1,7 @@
 {
   "name": "curiomac",
   "version": "1.0.0",
-  "description": "gamestore",
+  "description": "e-commerce",
   "main": "index.js",
   "scripts": {
     "start": "nodemon server/server.js",
@@ -17,6 +17,7 @@
     "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",
     "crypto": "^1.0.1",
+    "crypto-js": "^4.2.0",
     "dotenv": "^16.0.3",
     "express": "^4.18.2",
     "firebase-admin": "^12.1.1",

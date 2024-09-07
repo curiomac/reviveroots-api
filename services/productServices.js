@@ -23,7 +23,8 @@ const ProductService = () => {
         manufacturer,
         availableQuantity,
         maximumQuantity,
-      } = productData;      
+        productTags,
+      } = productData;
       const user = req.user;
       if (!user) {
         throw new CustomError(CLIENT_MESSAGES.ERROR_MESSAGES.USER_NOT_FOUND);
@@ -88,10 +89,11 @@ const ProductService = () => {
         grossPrice: formattedGrossPrice(),
         salePrice: formattedSalePrice().salePrice,
         discountPrice: formattedSalePrice().discountPrice,
+        productTags: JSON.parse(productTags),
         ...(isAdditionalInfo && { manufacturer }),
         ...(isAdditionalInfo && { countryOfMade }),
         createdBy: user?._id,
-        updatedBy: user?._id
+        updatedBy: user?._id,
       };
       // Creating product to DataBase
       const product = await Product.create(formattedProductData);
@@ -124,12 +126,14 @@ const ProductService = () => {
         availableQuantity,
         maximumQuantity,
         productImages,
+        productTags,
+        availableSizes
       } = productData;
       const user = req.user;
       if (!user) {
         throw new CustomError(CLIENT_MESSAGES.ERROR_MESSAGES.USER_NOT_FOUND);
       }
-      
+
       const productFound = await Product.findById(productId);
       if (!productFound) {
         throw new CustomError(CLIENT_MESSAGES.ERROR_MESSAGES.PRODUCT_NOT_FOUND);
@@ -203,9 +207,11 @@ const ProductService = () => {
         grossPrice: formattedGrossPrice(),
         salePrice: formattedSalePrice().salePrice,
         discountPrice: formattedSalePrice().discountPrice,
+        productTags: JSON.parse(productTags),
+        availableSizes: JSON.parse(availableSizes),
         ...(isAdditionalInfo && { manufacturer }),
         ...(isAdditionalInfo && { countryOfMade }),
-        updatedBy: user?._id
+        updatedBy: user?._id,
       };
       // throw new CustomError('error.message');
       // Creating product to DataBase
@@ -258,7 +264,10 @@ const ProductService = () => {
             moment(currentDate).isSameOrBefore(data.discountEndDate);
           const updatedData = await Product.findByIdAndUpdate(
             data._id,
-            { isDiscountedProduct: isDiscounted },
+            {
+              isDiscountedProduct: isDiscounted,
+              salePrice: isDiscounted ? data.salePrice : data.grossPrice,
+            },
             { new: true }
           );
 
@@ -280,6 +289,179 @@ const ProductService = () => {
       throw new CustomError(error.message);
     }
   };
+  /**
+   * Recent Products Fetching
+   */
+  const getRecentProducts = async (product_ids, req) => {
+    try {
+      console.log("product_idsasas: ", product_ids);
+
+      // Fetching all products from their IDs in parallel
+      const products = await Promise.all(
+        JSON.parse(product_ids).map(async (productId) => {
+          const foundProduct = await Product.findById(productId);
+          if (foundProduct) {
+            const currentDate = new Date();
+            const isDiscounted =
+              moment(currentDate).isSameOrAfter(
+                foundProduct.discountStartDate
+              ) &&
+              moment(currentDate).isSameOrBefore(foundProduct.discountEndDate);
+            const updatedProduct = await Product.findByIdAndUpdate(
+              foundProduct._id,
+              {
+                isDiscountedProduct: isDiscounted,
+                salePrice: isDiscounted
+                  ? foundProduct.salePrice
+                  : foundProduct.grossPrice,
+              },
+              { new: true }
+            );
+
+            return updatedProduct;
+          }
+          return null;
+        })
+      );
+
+      const validProducts = products.filter((product) => product !== null);
+
+      // Returning Client Response to Controller
+      return {
+        data: {
+          products: validProducts,
+        },
+        message:
+          CLIENT_MESSAGES.SUCCESS_MESSAGES.RECENT_PRODUCTS_FETCH_SUCCESSFUL,
+      };
+    } catch (error) {
+      throw new CustomError(error.message);
+    }
+  };
+
+  /**
+   * Category Products Fetching
+   */
+  const getCategoryProducts = async (req) => {
+    try {
+      const products = await Product.aggregate([
+        {
+          $group: {
+            _id: "$productCategory",
+            products: { $push: "$$ROOT" },
+          },
+        },
+        {
+          $project: {
+            productCategory: "$_id",
+            products: { $slice: ["$products", 3] },
+          },
+        },
+        { $unwind: "$products" },
+        { $replaceRoot: { newRoot: "$products" } },
+      ]);
+
+      const updatedProducts = await Promise.all(
+        products.map(async (data) => {
+          const formatDate = () => {
+            const date = new Date();
+            date.setUTCHours(0, 0, 0, 0);
+            return date.toISOString().split("T")[0] + "T00:00:00.000Z";
+          };
+          const currentDate = new Date(formatDate());
+          const isDiscounted =
+            moment(currentDate).isSameOrAfter(data.discountStartDate) &&
+            moment(currentDate).isSameOrBefore(data.discountEndDate);
+          console.log(
+            "DS: ",
+            moment(currentDate).isSameOrAfter(data.discountStartDate) &&
+              moment(currentDate).isSameOrBefore(data.discountEndDate)
+          );
+
+          const updatedData = await Product.findByIdAndUpdate(
+            data._id,
+            { isDiscountedProduct: isDiscounted },
+            { new: true }
+          );
+          return updatedData;
+        })
+      );
+
+      // Returning Client Response to Controller
+      return {
+        data: {
+          products: updatedProducts,
+        },
+        message: CLIENT_MESSAGES.SUCCESS_MESSAGES.PRODUCTS_FETCH_SUCCESSFUL,
+      };
+    } catch (error) {
+      throw new CustomError(error.message);
+    }
+  };
+  /**
+   * Similar Products Fetching
+   */
+  const getSimilarProducts = async (similarProductsQuery, req) => {
+    try {
+      const { productTags } = similarProductsQuery;
+
+      // Fetch similar products using productTags for prioritization
+      const similarProducts = await Product.aggregate([
+        {
+          $match: {
+            productTags: { $in: JSON.parse(productTags) },
+          },
+        },
+        {
+          $addFields: {
+            tagPriority: {
+              $size: {
+                $setIntersection: [JSON.parse(productTags), "$productTags"],
+              },
+            },
+          },
+        },
+        {
+          $sort: { tagPriority: -1 },
+        },
+        {
+          $limit: 10,
+        },
+      ]);
+
+      const updatedProducts = await Promise.all(
+        similarProducts.map(async (product) => {
+          const formatDate = () => {
+            const date = new Date();
+            date.setUTCHours(0, 0, 0, 0);
+            return date.toISOString().split("T")[0] + "T00:00:00.000Z";
+          };
+          const currentDate = new Date(formatDate());
+          const isDiscounted =
+            moment(currentDate).isSameOrAfter(product.discountStartDate) &&
+            moment(currentDate).isSameOrBefore(product.discountEndDate);
+
+          const updatedProduct = await Product.findByIdAndUpdate(
+            product._id,
+            { isDiscountedProduct: isDiscounted },
+            { new: true }
+          );
+          return updatedProduct;
+        })
+      );
+
+      return {
+        data: {
+          products: updatedProducts,
+        },
+        message:
+          CLIENT_MESSAGES.SUCCESS_MESSAGES.SIMILAR_PRODUCTS_FETCH_SUCCESSFUL,
+      };
+    } catch (error) {
+      throw new CustomError(error.message);
+    }
+  };
+
   /**
    * Single Product Fetching
    */
@@ -353,6 +535,9 @@ const ProductService = () => {
     getProducts,
     getProduct,
     deleteProduct,
+    getCategoryProducts,
+    getRecentProducts,
+    getSimilarProducts,
   };
 };
 

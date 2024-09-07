@@ -11,6 +11,9 @@ const {
   getProduct,
   deleteProduct,
   updateProduct,
+  getCategoryProducts,
+  getRecentProducts,
+  getSimilarProducts,
 } = require("../controllers/productController");
 const multer = require("multer");
 const path = require("path");
@@ -57,6 +60,13 @@ router
   );
 
 router.route("/get/products").get(headerVerification, getProducts);
+router
+  .route("/get/category/products")
+  .get(headerVerification, getCategoryProducts);
+router.route("/get/recent/products").get(headerVerification, getRecentProducts);
+router
+  .route("/get/similar/products")
+  .get(headerVerification, getSimilarProducts);
 router.route("/get/product").get(headerVerification, getProduct);
 router.route("/delete/product").delete(headerVerification, deleteProduct);
 

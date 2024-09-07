@@ -12,7 +12,7 @@ const CartService = () => {
   const addToCart = async (cartData, req) => {
     try {
       // Cart Data received from controller
-      const { action, productId, quantity } = cartData;
+      const { action, productId, quantity, selectedSize } = cartData;
 
       const userId = req?.user?.id;
 
@@ -31,6 +31,7 @@ const CartService = () => {
         onAddSalePrice: product.salePrice,
         currentSalePrice: product.salePrice,
         quantity: quantity ? quantity : 1,
+        selectedSize,
       };
 
       const isCartFound = await Cart.findOne({ userId });
