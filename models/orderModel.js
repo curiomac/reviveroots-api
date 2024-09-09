@@ -91,6 +91,10 @@ const orderSchema = new mongoose.Schema({
         type: String,
         required: true,
       },
+      selectedSize: {
+        type: String,
+        required: true,
+      },
       productImages: [
         {
           url: {

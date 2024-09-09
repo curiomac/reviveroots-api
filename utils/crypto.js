@@ -4,7 +4,6 @@ dotenv.config({ path: 'config/config.env' });
 const secretKey = process.env.CRYPTO_SECRET;
 
 const crypto = () => {
-  console.log("process.env.CRYPTO_SECRET: ", secretKey);
   const encode = (data = "") => {
     if (!data) {
       throw new Error("No data provided for encryption.");

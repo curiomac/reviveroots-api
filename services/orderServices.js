@@ -6,6 +6,7 @@ const Order = require("../models/orderModel");
 const Product = require("../models/productModel");
 const { default: axios } = require("axios");
 const { API_ROUTES } = require("../utils/appConstants");
+const crypto = require("../utils/crypto");
 
 const OrderService = () => {
   /**
@@ -27,7 +28,7 @@ const OrderService = () => {
         throw new CustomError(CLIENT_MESSAGES.ERROR_MESSAGES.CART_NOT_FOUND);
       }
       const updatedProductPrice = cart?.productsIdsInCart?.map((data) => {
-        const gstPercentage = Number("2");
+        const gstPercentage = Number(process.env.GST_PERCENTAGE);
         const gstPrice = (data?.currentSalePrice * gstPercentage) / 100;
         const currentSalePriceWithGST =
           Number(data?.currentSalePrice) + gstPrice;
@@ -195,12 +196,17 @@ const OrderService = () => {
               },
             }
           );
-          return response?.data?.data?.orderDetails;
+          console.log("response?.data: ", response?.data);
+
+          const decryptedData = crypto().decode(response?.data?.encryptedData)?.data?.orderDetails;
+          return decryptedData;
         } catch (error) {
           throw new CustomError(error.message);
         }
       };
       const orderDetailsResponse = await getOrderDetails();
+      console.log("orderDetailsResponse: ", orderDetailsResponse);
+
       const formattedProductsInOrder =
         orderDetailsResponse?.productsInOrder?.map((data) => {
           return {
@@ -212,6 +218,7 @@ const OrderService = () => {
             productImages: data?.productImages,
             productName: data?.productName,
             productCategory: data?.productCategory,
+            selectedSize: data?.selectedSize,
           };
         });
       const formattedShippingAddress = {
@@ -233,7 +240,7 @@ const OrderService = () => {
         orderSummary: orderDetailsResponse?.orderSummary,
         shippingAddress: formattedShippingAddress,
       };
-      
+
       const orderDetails = await Order.create(formattedOrderData);
 
       if (orderDetails) {

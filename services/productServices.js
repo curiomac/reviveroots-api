@@ -6,6 +6,35 @@ const APIFeatures = require("../utils/apiFeatures");
 const moment = require("moment");
 
 const ProductService = () => {
+  /* Check is discounted product */
+  const discountVerifiedProducts = async (products) =>
+    await Promise.all(
+      products.map(async (product) => {
+        const formatDate = () => {
+          const date = new Date();
+          date.setUTCHours(0, 0, 0, 0);
+          return date.toISOString().split("T")[0] + "T00:00:00.000Z";
+        };
+        const currentDate = new Date(formatDate());
+        const isDiscounted =
+          moment(currentDate).isSameOrAfter(product.discountStartDate) &&
+          moment(currentDate).isSameOrBefore(product.discountEndDate);
+        console.log("isDiscounted: ", isDiscounted);
+
+        const updatedProduct = await Product.findByIdAndUpdate(
+          product._id,
+          {
+            isDiscountedProduct: isDiscounted,
+            salePrice: isDiscounted
+              ? product.grossPrice - product.discountPrice
+              : product.grossPrice,
+          },
+          { new: true }
+        );
+        return updatedProduct;
+      })
+    );
+
   /**
    * Product Creation
    */
@@ -127,7 +156,7 @@ const ProductService = () => {
         maximumQuantity,
         productImages,
         productTags,
-        availableSizes
+        availableSizes,
       } = productData;
       const user = req.user;
       if (!user) {
@@ -251,29 +280,7 @@ const ProductService = () => {
           ? Math.ceil(productsCount / resPerPage)
           : 1;
       const formattedProducts = await buildQuery().paginate(resPerPage).query;
-      const products = await Promise.all(
-        formattedProducts.map(async (data) => {
-          const formatDate = () => {
-            const date = new Date();
-            date.setUTCHours(0, 0, 0, 0);
-            return date.toISOString().split("T")[0] + "T00:00:00.000Z";
-          };
-          const currentDate = new Date(formatDate());
-          const isDiscounted =
-            moment(currentDate).isSameOrAfter(data.discountStartDate) &&
-            moment(currentDate).isSameOrBefore(data.discountEndDate);
-          const updatedData = await Product.findByIdAndUpdate(
-            data._id,
-            {
-              isDiscountedProduct: isDiscounted,
-              salePrice: isDiscounted ? data.salePrice : data.grossPrice,
-            },
-            { new: true }
-          );
-
-          return updatedData;
-        })
-      );
+      const products = await discountVerifiedProducts(formattedProducts);
 
       // Returning Client Response to Controller
       return {
@@ -361,31 +368,7 @@ const ProductService = () => {
         { $replaceRoot: { newRoot: "$products" } },
       ]);
 
-      const updatedProducts = await Promise.all(
-        products.map(async (data) => {
-          const formatDate = () => {
-            const date = new Date();
-            date.setUTCHours(0, 0, 0, 0);
-            return date.toISOString().split("T")[0] + "T00:00:00.000Z";
-          };
-          const currentDate = new Date(formatDate());
-          const isDiscounted =
-            moment(currentDate).isSameOrAfter(data.discountStartDate) &&
-            moment(currentDate).isSameOrBefore(data.discountEndDate);
-          console.log(
-            "DS: ",
-            moment(currentDate).isSameOrAfter(data.discountStartDate) &&
-              moment(currentDate).isSameOrBefore(data.discountEndDate)
-          );
-
-          const updatedData = await Product.findByIdAndUpdate(
-            data._id,
-            { isDiscountedProduct: isDiscounted },
-            { new: true }
-          );
-          return updatedData;
-        })
-      );
+      const updatedProducts = await discountVerifiedProducts(products);
 
       // Returning Client Response to Controller
       return {
@@ -429,26 +412,8 @@ const ProductService = () => {
         },
       ]);
 
-      const updatedProducts = await Promise.all(
-        similarProducts.map(async (product) => {
-          const formatDate = () => {
-            const date = new Date();
-            date.setUTCHours(0, 0, 0, 0);
-            return date.toISOString().split("T")[0] + "T00:00:00.000Z";
-          };
-          const currentDate = new Date(formatDate());
-          const isDiscounted =
-            moment(currentDate).isSameOrAfter(product.discountStartDate) &&
-            moment(currentDate).isSameOrBefore(product.discountEndDate);
-
-          const updatedProduct = await Product.findByIdAndUpdate(
-            product._id,
-            { isDiscountedProduct: isDiscounted },
-            { new: true }
-          );
-          return updatedProduct;
-        })
-      );
+      const updatedProducts = await discountVerifiedProducts(similarProducts);
+      console.log("updatedProducts: ", updatedProducts);
 
       return {
         data: {
@@ -487,7 +452,12 @@ const ProductService = () => {
           );
         const updatedData = await Product.findByIdAndUpdate(
           formattedProduct?._id,
-          { isDiscountedProduct: isDiscounted },
+          {
+            isDiscountedProduct: isDiscounted,
+            salePrice: isDiscounted
+              ? formattedProduct.grossPrice - formattedProduct.discountPrice
+              : formattedProduct.grossPrice,
+          },
           { new: true }
         );
 
