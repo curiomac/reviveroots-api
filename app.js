@@ -9,8 +9,9 @@ const product = require("./routes/product");
 const cart = require("./routes/cart");
 const order = require("./routes/order");
 const address = require("./routes/address");
-const dotenv = require('dotenv');
-dotenv.config({ path: 'config/config.env' });
+const review = require("./routes/review");
+const dotenv = require("dotenv");
+dotenv.config({ path: "config/config.env" });
 
 const corsOptions = {
   origin: true,
@@ -37,6 +38,7 @@ app.use(BASE_URL, product);
 app.use(BASE_URL, cart);
 app.use(BASE_URL, order);
 app.use(BASE_URL, address);
+app.use(BASE_URL, review);
 
 app.use(errorMiddleware);
 

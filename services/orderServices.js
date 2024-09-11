@@ -180,10 +180,12 @@ const OrderService = () => {
         country,
       } = orderData;
       const user = req.user;
-      // Verifing User
+
+      // Verifying User
       if (!user) {
         throw new CustomError(CLIENT_MESSAGES.ERROR_MESSAGES.USER_NOT_FOUND);
       }
+
       const getOrderDetails = async () => {
         try {
           const response = await axios.get(
@@ -196,16 +198,16 @@ const OrderService = () => {
               },
             }
           );
-          console.log("response?.data: ", response?.data);
 
-          const decryptedData = crypto().decode(response?.data?.encryptedData)?.data?.orderDetails;
+          const decryptedData = crypto().decode(response?.data?.encryptedData)
+            ?.data?.orderDetails;
           return decryptedData;
         } catch (error) {
           throw new CustomError(error.message);
         }
       };
+
       const orderDetailsResponse = await getOrderDetails();
-      console.log("orderDetailsResponse: ", orderDetailsResponse);
 
       const formattedProductsInOrder =
         orderDetailsResponse?.productsInOrder?.map((data) => {
@@ -221,6 +223,7 @@ const OrderService = () => {
             selectedSize: data?.selectedSize,
           };
         });
+
       const formattedShippingAddress = {
         email,
         firstName,
@@ -234,6 +237,7 @@ const OrderService = () => {
         state,
         country,
       };
+
       const formattedOrderData = {
         userId: user.id,
         productsInOrder: formattedProductsInOrder,
@@ -244,10 +248,43 @@ const OrderService = () => {
       const orderDetails = await Order.create(formattedOrderData);
 
       if (orderDetails) {
+        for (const product of formattedProductsInOrder) {
+          const foundProduct = await Product.findOne({
+            _id: product.productId,
+          });
+
+          const currentAvailableQuantity = Number(
+            foundProduct.availableQuantity
+          );
+          const orderedQuantity = Number(product.quantity);
+
+          if (isNaN(currentAvailableQuantity) || isNaN(orderedQuantity)) {
+            throw new CustomError(
+              CLIENT_MESSAGES.ERROR_MESSAGES.INTERNAL_SERVER_ERROR
+            );
+          }
+
+          const updatedAvailableQuantity =
+            currentAvailableQuantity - orderedQuantity;
+
+          await Product.findOneAndUpdate(
+            { _id: product.productId },
+            {
+              availableQuantity: updatedAvailableQuantity.toString(),
+              $push: {
+                verifiedPurchaseUsers: {
+                  userId: user?._id,
+                  productId: product?.productId,
+                  purchasedSize: product?.selectedSize,
+                },
+              },
+            }
+          );
+        }
+
         await Cart.findOneAndDelete({ userId: user._id });
       }
 
-      // Returning Client Response to Controller
       return {
         data: {
           orderDetails,
@@ -259,6 +296,7 @@ const OrderService = () => {
       throw new CustomError(error.message);
     }
   };
+
   /**
    * Order Creating
    */

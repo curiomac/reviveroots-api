@@ -2,6 +2,7 @@
 const CLIENT_MESSAGES = require("../utils/clientResponseConstants");
 const CustomError = require("../helpers/customError");
 const Product = require("../models/productModel");
+const Review = require("../models/reviewModel");
 const APIFeatures = require("../utils/apiFeatures");
 const moment = require("moment");
 
@@ -19,7 +20,6 @@ const ProductService = () => {
         const isDiscounted =
           moment(currentDate).isSameOrAfter(product.discountStartDate) &&
           moment(currentDate).isSameOrBefore(product.discountEndDate);
-        console.log("isDiscounted: ", isDiscounted);
 
         const updatedProduct = await Product.findByIdAndUpdate(
           product._id,
@@ -301,8 +301,6 @@ const ProductService = () => {
    */
   const getRecentProducts = async (product_ids, req) => {
     try {
-      console.log("product_idsasas: ", product_ids);
-
       // Fetching all products from their IDs in parallel
       const products = await Promise.all(
         JSON.parse(product_ids).map(async (productId) => {
@@ -413,7 +411,6 @@ const ProductService = () => {
       ]);
 
       const updatedProducts = await discountVerifiedProducts(similarProducts);
-      console.log("updatedProducts: ", updatedProducts);
 
       return {
         data: {
@@ -464,11 +461,24 @@ const ProductService = () => {
         return updatedData;
       };
       const product = await updatedProduct();
-
+      const ratings = await Review.findOne({ productId: product?._id });
+      let averageRating = 0;
+      if (ratings?.reviewsList && ratings.reviewsList.length > 0) {
+        const reviewsList = ratings.reviewsList;
+        const totalRatings = reviewsList.reduce(
+          (acc, review) => acc + Number(review.ratingValue),
+          0
+        );
+        const numberOfRatings = reviewsList.length;
+        const averageRatingValue = totalRatings / numberOfRatings;
+        averageRating = Math.floor(averageRatingValue).toString();
+      } else {
+        averageRating = 0;
+      }
       // Returning Client Response to Controller
       return {
         data: {
-          product,
+          product: { ...product?._doc, averageRating },
         },
         message: CLIENT_MESSAGES.SUCCESS_MESSAGES.PRODUCT_FETCH_SUCCESSFUL,
       };

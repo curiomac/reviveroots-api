@@ -184,7 +184,6 @@ exports.getRecentProducts = async (req, res, next) => {
     console.log(LOGGER_MESSAGES.RECENT_PRODUCTS_FETCH);
     // Query Data
     const { product_ids } = req.query;
-    console.log("product_ids: ", product_ids);
     
     // Checking required fields
     if (!product_ids) {
@@ -221,7 +220,6 @@ exports.getSimilarProducts = async (req, res, next) => {
     console.log(LOGGER_MESSAGES.SIMILAR_PRODUCTS_FETCH);
     // Query Data
     const { productTags } = req.query;
-    console.log("productTags: ", productTags);
     
     // Checking required fields
     if (!productTags) {

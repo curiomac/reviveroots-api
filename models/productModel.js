@@ -136,7 +136,27 @@ const productSchema = new mongoose.Schema({
   //     required: true,
   //   },
   // },
-  verifiedPurchasUsers: [
+  verifiedPurchaseUsers: [
+    {
+      userId: {
+        type: mongoose.Schema.Types.ObjectId,
+        required: [true, "Please provide the User Id"],
+      },
+      productId: {
+        type: mongoose.Schema.Types.ObjectId,
+        required: [true, "Please provide the Product Id"],
+      },
+      purchasedSize: {
+        type: String,
+        required: [true, "Please provide the Purchased Size"],
+      },
+      productReviewed: {
+        type: String,
+        default: "false",
+      },
+    },
+  ],
+  reviewedUsers: [
     {
       userId: {
         type: mongoose.Schema.Types.ObjectId,
@@ -149,22 +169,6 @@ const productSchema = new mongoose.Schema({
       userId: {
         type: mongoose.Schema.Types.ObjectId,
         required: [true, "Please provide the User Id"],
-      },
-    },
-  ],
-  isSimilarTo: [
-    {
-      productIds: {
-        type: mongoose.Schema.Types.ObjectId,
-        required: [true, "Please provide the Product Id"],
-      },
-    },
-  ],
-  isRelatedTo: [
-    {
-      productIds: {
-        type: mongoose.Schema.Types.ObjectId,
-        required: [true, "Please provide the Product Id"],
       },
     },
   ],

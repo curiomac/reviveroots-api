@@ -102,9 +102,12 @@ const UserService = () => {
       if (verificationData.secretCode !== secretCodeClient) {
         throw new CustomError(CLIENT_MESSAGES.ERROR_MESSAGES.CODE_INVALID);
       }
+      console.log("userData: ", userData);
+      
       // Creating user to DataBase
       const user = await User.create({
         ...userData,
+        alternateEmail: email,
         userStatus: STATUS.ACTIVE,
       });
       await SecretCode.deleteOne({ email });
@@ -187,8 +190,6 @@ const UserService = () => {
    */
   const updateProfile = async (userData, req) => {
     try {
-      console.log("userData: ", userData);
-
       const {
         firstName,
         lastName,
