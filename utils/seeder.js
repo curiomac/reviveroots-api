@@ -19,3 +19,21 @@ const seedProduct = async () => {
 };
 
 seedProduct();
+
+// Storage 
+
+await Promise.all(products.map(async (product) => {
+    let updated = false;
+
+    product.productImages.forEach(image => {
+      if (image.url.includes('http://127.0.0.1:8000')) {
+        image.url = image.url.replace('http://127.0.0.1:8000', 'https://reviveroots-api.onrender.com');
+        updated = true;
+      }
+    });
+
+    // Save changes if URLs were updated
+    if (updated) {
+      await product.save();  // This will save the updated URLs back to the database
+    }
+  }));

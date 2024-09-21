@@ -99,7 +99,7 @@ exports.createOrder = async (req, res, next) => {
 exports.getOrder = async (req, res, next) => {
   try {
     // Initiating Logs
-    console.log(LOGGER_MESSAGES.ORDER_FETCH);
+    console.log(LOGGER_MESSAGES.ORDER_DETAILS_FETCH);
     // Body Data
     const { order_id } = req.query;
     // Checking required fields
@@ -120,6 +120,64 @@ exports.getOrder = async (req, res, next) => {
   } catch (error) {
     // Closing Logs
     console.log(LOGGER_MESSAGES.ORDER_DETAILS_FETCH_FAILED);
+    // Logging Catched Error
+    console.log("Error: ", error);
+    // Sending Response to Client
+    RESPONSE.handleErrorResponse(
+      HTTP_STATUS_CODES.INTERNAL_SERVER_ERROR,
+      error.message,
+      res
+    );
+  }
+};
+// Get Orders - /api/bytestation/v1/get/orders
+exports.getOrders = async (req, res, next) => {
+  try {
+    // Initiating Logs
+    console.log(LOGGER_MESSAGES.ORDERS_FETCH);
+    // Response from the Service
+    const responseData = await OrderServiceInstance.getOrders(req.query, req);
+    // Closing Logs
+    console.log(LOGGER_MESSAGES.ORDERS_FETCH_COMPLETED);
+    // Sending Response to Client
+    RESPONSE.handleSuccessResponse(
+      HTTP_STATUS_CODES.OK,
+      responseData.message,
+      responseData.data,
+      res
+    );
+  } catch (error) {
+    // Closing Logs
+    console.log(LOGGER_MESSAGES.ORDERS_FETCH_FAILED);
+    // Logging Catched Error
+    console.log("Error: ", error);
+    // Sending Response to Client
+    RESPONSE.handleErrorResponse(
+      HTTP_STATUS_CODES.INTERNAL_SERVER_ERROR,
+      error.message,
+      res
+    );
+  }
+};
+// Get All Orders - /api/bytestation/v1/get/all/orders
+exports.getAllOrders = async (req, res, next) => {
+  try {
+    // Initiating Logs
+    console.log(LOGGER_MESSAGES.ORDERS_FETCH);
+    // Response from the Service
+    const responseData = await OrderServiceInstance.getAllOrders(req);
+    // Closing Logs
+    console.log(LOGGER_MESSAGES.ORDERS_FETCH_COMPLETED);
+    // Sending Response to Client
+    RESPONSE.handleSuccessResponse(
+      HTTP_STATUS_CODES.OK,
+      responseData.message,
+      responseData.data,
+      res
+    );
+  } catch (error) {
+    // Closing Logs
+    console.log(LOGGER_MESSAGES.ORDERS_FETCH_FAILED);
     // Logging Catched Error
     console.log("Error: ", error);
     // Sending Response to Client

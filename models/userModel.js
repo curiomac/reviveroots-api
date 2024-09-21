@@ -74,7 +74,6 @@ const secretCodeSchema = new mongoose.Schema({
     required: true,
   },
   expirationTime: {
-    // Code will expire within 15 minutes from Date now
     type: Date,
     default: () => Date.now() + 15 * 60 * 1000,
   },

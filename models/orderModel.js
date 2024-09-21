@@ -4,8 +4,15 @@ const {
   PAYMENT_STATUS,
   SHIPMENT_STATUS,
 } = require("../utils/appConstants");
+const { v4: uuidv4 } = require("uuid");
 
 const orderSchema = new mongoose.Schema({
+  _id: {
+    type: String,
+    default: function () {
+      return uuidv4().split("-")[4].toUpperCase();
+    },
+  },
   userId: {
     type: mongoose.Schema.Types.ObjectId,
     required: true,

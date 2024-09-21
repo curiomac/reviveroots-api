@@ -103,7 +103,7 @@ const UserService = () => {
         throw new CustomError(CLIENT_MESSAGES.ERROR_MESSAGES.CODE_INVALID);
       }
       console.log("userData: ", userData);
-      
+
       // Creating user to DataBase
       const user = await User.create({
         ...userData,
@@ -216,7 +216,7 @@ const UserService = () => {
       };
       const updatedUser = await User.findByIdAndUpdate(
         req.user.id,
-        formattedUser,
+        { ...formattedUser, updatedAt: Date.now() },
         { new: true, upsert: true }
       );
       // Returning Client Response to Controller

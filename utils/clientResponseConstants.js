@@ -9,7 +9,8 @@ const CLIENT_MESSAGES = {
     SIMILAR_PRODUCTS_FETCH_SUCCESSFUL: "Similar Products fetched successfully.",
     PRODUCT_FETCH_SUCCESSFUL: "Product fetched successfully.",
     ORDER_DETAILS_FETCH_SUCCESSFUL: "Order details fetched successfully.",
-    ORDER_CREATION_SUCCESSFUL: "Order created successfully.",
+    ORDERS_FETCH_SUCCESSFUL: "Orders fetched successfully.",
+    ORDER_CREATION_SUCCESSFUL: "Order placed successfully.",
     ADDRESS_CREATION_SUCCESSFUL: "Address created successfully.",
     ADDRESS_UPDATE_SUCCESSFUL: "Address updated successfully.",
     ADDRESSES_FETCH_SUCCESSFUL: "Addresses fetched successfully.",
@@ -72,6 +73,8 @@ const CLIENT_MESSAGES = {
       "Review not found. Please verify the entered Product Id or contact support for assistance.",
     ORDER_NOT_FOUND:
       "Order not found. Please verify the entered Product Id or contact support for assistance.",
+    ORDERS_NOT_FOUND:
+      "Orders not found. Please verify the entered Product Id or contact support for assistance.",
     USER_REGISTERAION_FAILED: "User registeration failed.",
     LOGIN_FAILED: "User login failed.",
     EMPTY_FIELD_ERROR: "Please provide all the required fields.",

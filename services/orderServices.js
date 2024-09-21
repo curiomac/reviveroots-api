@@ -7,6 +7,7 @@ const Product = require("../models/productModel");
 const { default: axios } = require("axios");
 const { API_ROUTES } = require("../utils/appConstants");
 const crypto = require("../utils/crypto");
+const { checkIsAdmin } = require("../utils/checkIsAdmin");
 
 const OrderService = () => {
   /**
@@ -298,7 +299,7 @@ const OrderService = () => {
   };
 
   /**
-   * Order Creating
+   * Single Order Fetching
    */
   const getOrder = async (orderId, req) => {
     try {
@@ -307,8 +308,9 @@ const OrderService = () => {
       if (!user) {
         throw new CustomError(CLIENT_MESSAGES.ERROR_MESSAGES.USER_NOT_FOUND);
       }
+      const isAdmin = checkIsAdmin(user?.role);
       const orderDetails = await Order.findOne({
-        userId: user.id,
+        ...(!isAdmin && { userId: user.id }),
         _id: orderId,
       });
       // Verifing Order
@@ -328,6 +330,68 @@ const OrderService = () => {
       throw new CustomError(error.message);
     }
   };
+  /**
+   * Orders Fetching
+   */
+  const getOrders = async (orderData, req) => {
+    try {
+      const user = req.user;
+      const { keyword } = orderData;
+      // Verifing User
+      if (!user) {
+        throw new CustomError(CLIENT_MESSAGES.ERROR_MESSAGES.USER_NOT_FOUND);
+      }
+      const ordersCount = await Order.countDocuments({
+        userId: user.id,
+      });
+      const orders = await Order.find({
+        userId: user.id,
+        ...(keyword && { _id: { $regex: keyword, $options: "i" } }),
+      });
+      console.log("orders: ", ordersCount);
+
+      // Verifing Order
+      if (!orders) {
+        throw new CustomError(CLIENT_MESSAGES.ERROR_MESSAGES.ORDERS_NOT_FOUND);
+      }
+      // Returning Client Response to Controller
+      return {
+        data: {
+          orders,
+          ordersCount,
+        },
+        message: CLIENT_MESSAGES.SUCCESS_MESSAGES.ORDERS_FETCH_SUCCESSFUL,
+      };
+    } catch (error) {
+      throw new CustomError(error.message);
+    }
+  };
+  /**
+   * All Orders Fetching
+   */
+  const getAllOrders = async (req) => {
+    try {
+      const user = req.user;
+      // Verifing User
+      if (!user) {
+        throw new CustomError(CLIENT_MESSAGES.ERROR_MESSAGES.USER_NOT_FOUND);
+      }
+      const orders = await Order.find();
+      // Verifing Order
+      if (!orders) {
+        throw new CustomError(CLIENT_MESSAGES.ERROR_MESSAGES.ORDERS_NOT_FOUND);
+      }
+      // Returning Client Response to Controller
+      return {
+        data: {
+          orders,
+        },
+        message: CLIENT_MESSAGES.SUCCESS_MESSAGES.ORDERS_FETCH_SUCCESSFUL,
+      };
+    } catch (error) {
+      throw new CustomError(error.message);
+    }
+  };
 
   /**
    * Returning Services to Controller
@@ -336,6 +400,8 @@ const OrderService = () => {
     getOrderDetails,
     createOrder,
     getOrder,
+    getOrders,
+    getAllOrders,
   };
 };
 
