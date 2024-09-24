@@ -184,13 +184,16 @@ exports.getRecentProducts = async (req, res, next) => {
     console.log(LOGGER_MESSAGES.RECENT_PRODUCTS_FETCH);
     // Query Data
     const { product_ids } = req.query;
-    
+
     // Checking required fields
     if (!product_ids) {
       throw new CustomError(CLIENT_MESSAGES.ERROR_MESSAGES.EMPTY_FIELD_ERROR);
     }
     // Response from the Service
-    const responseData = await ProductServiceInstance.getRecentProducts(product_ids, req);
+    const responseData = await ProductServiceInstance.getRecentProducts(
+      product_ids,
+      req
+    );
     // Closing Logs
     console.log(LOGGER_MESSAGES.RECENT_PRODUCTS_FETCH_COMPLETED);
     // Sending Response to Client
@@ -213,22 +216,25 @@ exports.getRecentProducts = async (req, res, next) => {
     );
   }
 };
-// Get Recent Products - /api/bytestation/v1/get/recent/products
+// Get Similar Products - /api/bytestation/v1/get/similar/products
 exports.getSimilarProducts = async (req, res, next) => {
   try {
     // Initiating Logs
     console.log(LOGGER_MESSAGES.SIMILAR_PRODUCTS_FETCH);
     // Query Data
     const { productTags } = req.query;
-    
+
     // Checking required fields
     if (!productTags) {
       throw new CustomError(CLIENT_MESSAGES.ERROR_MESSAGES.EMPTY_FIELD_ERROR);
     }
     // Response from the Service
-    const responseData = await ProductServiceInstance.getSimilarProducts(req.query, req);
+    const responseData = await ProductServiceInstance.getSimilarProducts(
+      req.query,
+      req
+    );
     // Closing Logs
-    console.log(LOGGER_MESSAGES.SECRET_CODE_SEND_COMPLETED);
+    console.log(LOGGER_MESSAGES.SIMILAR_PRODUCTS_FETCH_COMPLETED);
     // Sending Response to Client
     RESPONSE.handleSuccessResponse(
       HTTP_STATUS_CODES.OK,
@@ -238,7 +244,67 @@ exports.getSimilarProducts = async (req, res, next) => {
     );
   } catch (error) {
     // Closing Logs
-    console.log(LOGGER_MESSAGES.SECRET_CODE_SEND_FAILED);
+    console.log(LOGGER_MESSAGES.SIMILAR_PRODUCTS_FETCH_FAILED);
+    // Logging Catched Error
+    console.log("Error: ", error);
+    // Sending Response to Client
+    RESPONSE.handleErrorResponse(
+      HTTP_STATUS_CODES.INTERNAL_SERVER_ERROR,
+      error.message,
+      res
+    );
+  }
+};
+// Get Popular Products - /api/bytestation/v1/get/popular/products
+exports.getPopularProducts = async (req, res, next) => {
+  try {
+    // Initiating Logs
+    console.log(LOGGER_MESSAGES.POPULAR_PRODUCTS_FETCH);
+    // Response from the Service
+    const responseData = await ProductServiceInstance.getPopularProducts(req);
+    // Closing Logs
+    console.log(LOGGER_MESSAGES.POPULAR_PRODUCTS_FETCH_COMPLETED);
+    // Sending Response to Client
+    RESPONSE.handleSuccessResponse(
+      HTTP_STATUS_CODES.OK,
+      responseData.message,
+      responseData.data,
+      res
+    );
+  } catch (error) {
+    // Closing Logs
+    console.log(LOGGER_MESSAGES.POPULAR_PRODUCTS_FETCH_FAILED);
+    // Logging Catched Error
+    console.log("Error: ", error);
+    // Sending Response to Client
+    RESPONSE.handleErrorResponse(
+      HTTP_STATUS_CODES.INTERNAL_SERVER_ERROR,
+      error.message,
+      res
+    );
+  }
+};
+// Get Recommended Products - /api/bytestation/v1/get/recommended/products
+exports.getRecommendedProducts = async (req, res, next) => {
+  try {
+    // Initiating Logs
+    console.log(LOGGER_MESSAGES.RECOMMENDED_PRODUCTS_FETCH);
+    // Response from the Service
+    const responseData = await ProductServiceInstance.getRecommendedProducts(
+      req
+    );
+    // Closing Logs
+    console.log(LOGGER_MESSAGES.RECOMMENDED_PRODUCTS_FETCH_COMPLETED);
+    // Sending Response to Client
+    RESPONSE.handleSuccessResponse(
+      HTTP_STATUS_CODES.OK,
+      responseData.message,
+      responseData.data,
+      res
+    );
+  } catch (error) {
+    // Closing Logs
+    console.log(LOGGER_MESSAGES.RECOMMENDED_PRODUCTS_FETCH_COMPLETED);
     // Logging Catched Error
     console.log("Error: ", error);
     // Sending Response to Client

@@ -10,6 +10,7 @@ const cart = require("./routes/cart");
 const order = require("./routes/order");
 const address = require("./routes/address");
 const review = require("./routes/review");
+const testQuestions = require("./routes/testQuestions");
 const dotenv = require("dotenv");
 dotenv.config({ path: "config/config.env" });
 
@@ -39,6 +40,7 @@ app.use(BASE_URL, cart);
 app.use(BASE_URL, order);
 app.use(BASE_URL, address);
 app.use(BASE_URL, review);
+app.use(BASE_URL, testQuestions);
 
 app.use(errorMiddleware);
 

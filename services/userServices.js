@@ -9,7 +9,6 @@ const HandleResponse = require("../helpers/handleResponse");
 const readHTMLTemplate = require("../utils/readHTMLTemplate");
 const secretCodeGenerator = require("../utils/secretCodeGenerator");
 const sendEmail = require("../utils/email");
-const SECRET_CODE = secretCodeGenerator();
 const path = require("path");
 const moment = require("moment");
 const { STATUS } = require("../utils/appConstants");
@@ -38,12 +37,11 @@ const UserService = () => {
       }
       const codeFound = await SecretCode.findOne({ email });
       if (
-        false
-        // codeFound
+        codeFound
       ) {
         throw new CustomError(CLIENT_MESSAGES.ERROR_MESSAGES.CODE_ALREADY_SENT);
       }
-
+      const SECRET_CODE = secretCodeGenerator();
       const verificationData = {
         email,
         secretCode: SECRET_CODE,
@@ -57,8 +55,8 @@ const UserService = () => {
         {
           greet:
             authCode === "0"
-              ? "Great to see you again! Welcome back to Byte Station."
-              : authCode === "1" && "We’re excited you’ve joined Byte Station.",
+              ? "Great to see you again! Welcome back to Revive Roots."
+              : authCode === "1" && "We’re excited you’ve joined Revive Roots.",
           secretCode: SECRET_CODE,
         }
       );

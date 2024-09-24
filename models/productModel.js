@@ -172,6 +172,10 @@ const productSchema = new mongoose.Schema({
       },
     },
   ],
+  productViews: {
+    type: String,
+    default: "0",
+  },
   createdAt: {
     type: Date,
     default: Date.now,

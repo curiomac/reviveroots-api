@@ -423,6 +423,122 @@ const ProductService = () => {
       throw new CustomError(error.message);
     }
   };
+  /**
+   * Popular Products Fetching
+   */
+  const getPopularProducts = async (req) => {
+    try {
+      const popularProducts = await Product.aggregate([
+        {
+          $addFields: {
+            productViewsInt: { $toInt: "$productViews" },
+            verifiedPurchaseUsersCount: { $size: "$verifiedPurchaseUsers" },
+            reviewedUsersCount: { $size: "$reviewedUsers" },
+          },
+        },
+        {
+          $sort: {
+            productViewsInt: -1,
+            verifiedPurchaseUsersCount: -1,
+            reviewedUsersCount: -1,
+          },
+        },
+        {
+          $limit: 10,
+        },
+      ]);
+
+      const updatedProducts = await discountVerifiedProducts(popularProducts);
+
+      return {
+        data: {
+          products: updatedProducts,
+        },
+        message:
+          CLIENT_MESSAGES.SUCCESS_MESSAGES.POPULAR_PRODUCTS_FETCH_SUCCESSFUL,
+      };
+    } catch (error) {
+      throw new CustomError(error.message);
+    }
+  };
+  /**
+   * Recommended Products Fetching based on Reviews
+   */
+  const getRecommendedProducts = async (req) => {
+    try {
+      const recommendedProducts = await Product.aggregate([
+        {
+          $lookup: {
+            from: "reviews",
+            localField: "_id",
+            foreignField: "productId",
+            as: "productReviews",
+          },
+        },
+        {
+          $addFields: {
+            totalReviews: { $size: "$productReviews.reviewsList" },
+            averageRating: {
+              $avg: {
+                $map: {
+                  input: "$productReviews.reviewsList",
+                  as: "review",
+                  in: {
+                    $convert: {
+                      input: "$$review.ratingValue",
+                      to: "double",
+                      onError: 0,
+                      onNull: 0,
+                    },
+                  },
+                },
+              },
+            },
+            totalVerifiedPurchaseUsers: {
+              $size: {
+                $filter: {
+                  input: "$productReviews.reviewsList",
+                  as: "review",
+                  cond: { $eq: ["$$review.isVerifiedPurchasedUser", "true"] },
+                },
+              },
+            },
+          },
+        },
+        // {
+        //   $match: {
+        //     totalReviews: { $gte: 2 },
+        //     averageRating: { $gte: 4 },
+        //   },
+        // },
+        {
+          $sort: {
+            averageRating: -1,
+            totalReviews: -1,
+            totalVerifiedPurchaseUsers: -1,
+          },
+        },
+        {
+          $limit: 10,
+        },
+      ]);
+
+      const updatedProducts = await discountVerifiedProducts(
+        recommendedProducts
+      );
+
+      return {
+        data: {
+          products: updatedProducts,
+        },
+        message:
+          CLIENT_MESSAGES.SUCCESS_MESSAGES
+            .RECOMMENDED_PRODUCTS_FETCH_SUCCESSFUL,
+      };
+    } catch (error) {
+      throw new CustomError(error.message);
+    }
+  };
 
   /**
    * Single Product Fetching
@@ -440,6 +556,7 @@ const ProductService = () => {
           return date.toISOString().split("T")[0] + "T00:00:00.000Z";
         };
         const currentDate = new Date(formatDate());
+        const foundProductViews = Number(formattedProduct?.productViews) || 0;
         const isDiscounted =
           moment(currentDate)?.isSameOrAfter(
             formattedProduct?.discountStartDate
@@ -454,6 +571,7 @@ const ProductService = () => {
             salePrice: isDiscounted
               ? formattedProduct.grossPrice - formattedProduct.discountPrice
               : formattedProduct.grossPrice,
+            productViews: foundProductViews + 1,
           },
           { new: true }
         );
@@ -518,6 +636,8 @@ const ProductService = () => {
     getCategoryProducts,
     getRecentProducts,
     getSimilarProducts,
+    getPopularProducts,
+    getRecommendedProducts,
   };
 };
 

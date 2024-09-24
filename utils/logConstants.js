@@ -22,9 +22,15 @@ const LOGGER_MESSAGES = {
   PROFILE_UPDATE: "Update profile function initiated",
   PROFILE_UPDATE_COMPLETED: "Update profile function completed.",
   PROFILE_UPDATE_FAILED: "Update profile function failed.",
+  TEST_QUESTIONS_CREATION: "Test Questions creation function initiated.",
+  TEST_QUESTIONS_CREATION_COMPLETED: "Test Questions creation function completed.",
+  TEST_QUESTIONS_CREATION_FAILED: "Test Questions creation function failed.",
   ADDRESS_CREATION: "Address creation function initiated.",
   ADDRESS_CREATION_COMPLETED: "Address creation function completed.",
   ADDRESS_CREATION_FAILED: "Address creation function failed.",
+  ADDRESS_CREATION_FETCH: "Fetch Address creation function initiated.",
+  ADDRESS_CREATION_FETCH_COMPLETED: "Fetch Address creation function completed.",
+  ADDRESS_CREATION_FETCH_FAILED: "Fetch Address creation function failed.",
   ADDRESS_UPDATE: "Update address function initiated.",
   ADDRESS_UPDATE_COMPLETED: "Update address function completed.",
   ADDRESS_UPDATE_FAILED: "Update address function failed.",
@@ -80,6 +86,14 @@ const LOGGER_MESSAGES = {
   SIMILAR_PRODUCTS_FETCH_COMPLETED:
     "Similar Products fetching function completed.",
   SIMILAR_PRODUCTS_FETCH_FAILED: "Similar Products fetching function failed.",
+  POPULAR_PRODUCTS_FETCH: "Popular Products fetching function initiated.",
+  POPULAR_PRODUCTS_FETCH_COMPLETED:
+    "Popular Products fetching function completed.",
+  POPULAR_PRODUCTS_FETCH_FAILED: "Popular Products fetching function failed.",
+  RECOMMENDED_PRODUCTS_FETCH: "Recommended Products fetching function initiated.",
+  RECOMMENDED_PRODUCTS_FETCH_COMPLETED:
+    "Recommended Products fetching function completed.",
+  RECOMMENDED_PRODUCTS_FETCH_FAILED: "Recommended Products fetching function failed.",
   QUICK_BUY_PRODUCTS_FETCH: "Quick buy Products fetching function initiated.",
   QUICK_BUY_PRODUCTS_FETCH_COMPLETED:
     "Quick buy Products fetching function completed.",
