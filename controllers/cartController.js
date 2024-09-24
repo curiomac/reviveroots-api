@@ -5,6 +5,7 @@ const CLIENT_MESSAGES = require("../utils/clientResponseConstants");
 const LOGGER_MESSAGES = require("../utils/logConstants");
 const CartService = require("../services/cartServices");
 const CustomError = require("../helpers/customError");
+const { consoleHighlighted } = require("../utils/chalk");
 
 // Creating a Service Instance
 const CartServiceInstance = CartService();
@@ -13,7 +14,7 @@ const CartServiceInstance = CartService();
 exports.addToCart = async (req, res, next) => {
   try {
     // Initiating Logs
-    console.log(LOGGER_MESSAGES.ADD_TO_CART);
+    consoleHighlighted.initiate(LOGGER_MESSAGES.ADD_TO_CART);
     // Body Data
     const { productId } = req.body;
     // Checking required fields
@@ -23,7 +24,7 @@ exports.addToCart = async (req, res, next) => {
     // Response from the Service
     const responseData = await CartServiceInstance.addToCart(req.body, req);
     // Closing Logs
-    console.log(LOGGER_MESSAGES.ADD_TO_CART_COMPLETED);
+    consoleHighlighted.success(LOGGER_MESSAGES.ADD_TO_CART_COMPLETED);
     // Sending Response to Client
     RESPONSE.handleSuccessResponse(
       HTTP_STATUS_CODES.OK,
@@ -33,9 +34,9 @@ exports.addToCart = async (req, res, next) => {
     );
   } catch (error) {
     // Closing Logs
-    console.log(LOGGER_MESSAGES.ADD_TO_CART_FAILED);
+    consoleHighlighted.error(LOGGER_MESSAGES.ADD_TO_CART_FAILED);
     // Logging Catched Error
-    console.log("Error: ", error);
+    consoleHighlighted.error("", error);
     // Sending Response to Client
     RESPONSE.handleErrorResponse(
       HTTP_STATUS_CODES.INTERNAL_SERVER_ERROR,
@@ -48,11 +49,11 @@ exports.addToCart = async (req, res, next) => {
 exports.getCartItems = async (req, res, next) => {
   try {
     // Initiating Logs
-    console.log(LOGGER_MESSAGES.GET_CART_ITEMS);
+    consoleHighlighted.initiate(LOGGER_MESSAGES.GET_CART_ITEMS);
     // Response from the Service
     const responseData = await CartServiceInstance.getCartItems(req);
     // Closing Logs
-    console.log(LOGGER_MESSAGES.GET_CART_ITEMS_COMPLETED);
+    consoleHighlighted.success(LOGGER_MESSAGES.GET_CART_ITEMS_COMPLETED);
     // Sending Response to Client
     RESPONSE.handleSuccessResponse(
       HTTP_STATUS_CODES.OK,
@@ -62,9 +63,9 @@ exports.getCartItems = async (req, res, next) => {
     );
   } catch (error) {
     // Closing Logs
-    console.log(LOGGER_MESSAGES.GET_CART_ITEMS_FAILED);
+    consoleHighlighted.error(LOGGER_MESSAGES.GET_CART_ITEMS_FAILED);
     // Logging Catched Error
-    console.log("Error: ", error);
+    consoleHighlighted.error("", error);
     // Sending Response to Client
     RESPONSE.handleErrorResponse(
       HTTP_STATUS_CODES.INTERNAL_SERVER_ERROR,
@@ -77,11 +78,11 @@ exports.getCartItems = async (req, res, next) => {
 exports.getCheckoutDetails = async (req, res, next) => {
   try {
     // Initiating Logs
-    console.log(LOGGER_MESSAGES.GET_CART_ITEMS);
+    consoleHighlighted.initiate(LOGGER_MESSAGES.GET_CART_ITEMS);
     // Response from the Service
     const responseData = await CartServiceInstance.getCartItems(req);
     // Closing Logs
-    console.log(LOGGER_MESSAGES.GET_CART_ITEMS_COMPLETED);
+    consoleHighlighted.success(LOGGER_MESSAGES.GET_CART_ITEMS_COMPLETED);
     // Sending Response to Client
     RESPONSE.handleSuccessResponse(
       HTTP_STATUS_CODES.OK,
@@ -91,9 +92,9 @@ exports.getCheckoutDetails = async (req, res, next) => {
     );
   } catch (error) {
     // Closing Logs
-    console.log(LOGGER_MESSAGES.GET_CART_ITEMS_FAILED);
+    consoleHighlighted.error(LOGGER_MESSAGES.GET_CART_ITEMS_FAILED);
     // Logging Catched Error
-    console.log("Error: ", error);
+    consoleHighlighted.error("", error);
     // Sending Response to Client
     RESPONSE.handleErrorResponse(
       HTTP_STATUS_CODES.INTERNAL_SERVER_ERROR,

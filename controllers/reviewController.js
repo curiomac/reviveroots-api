@@ -5,6 +5,7 @@ const CLIENT_MESSAGES = require("../utils/clientResponseConstants");
 const LOGGER_MESSAGES = require("../utils/logConstants");
 const ReviewService = require("../services/reviewServices");
 const CustomError = require("../helpers/customError");
+const { consoleHighlighted } = require("../utils/chalk");
 
 // Creating a Service Instance
 const ReviewServiceInstance = ReviewService();
@@ -13,7 +14,7 @@ const ReviewServiceInstance = ReviewService();
 exports.createReview = async (req, res, next) => {
   try {
     // Initiating Logs
-    console.log(LOGGER_MESSAGES.REVIEW_CREATION);
+    consoleHighlighted.initiate(LOGGER_MESSAGES.REVIEW_CREATION);
     // Body Data
     const { productId, ratingValue, reviewTitle, reviewDetails } = req.body;
     "req.body: ", req.body;
@@ -28,7 +29,7 @@ exports.createReview = async (req, res, next) => {
       req
     );
     // Closing Logs
-    console.log(LOGGER_MESSAGES.REVIEW_CREATION_COMPLETED);
+    consoleHighlighted.success(LOGGER_MESSAGES.REVIEW_CREATION_COMPLETED);
     // Sending Response to Client
     RESPONSE.handleSuccessResponse(
       HTTP_STATUS_CODES.OK,
@@ -38,9 +39,9 @@ exports.createReview = async (req, res, next) => {
     );
   } catch (error) {
     // Closing Logs
-    console.log(LOGGER_MESSAGES.REVIEW_CREATION_FAILED);
+    consoleHighlighted.error(LOGGER_MESSAGES.REVIEW_CREATION_FAILED);
     // Logging Catched Error
-    console.log("Error: ", error);
+    consoleHighlighted.error("", error);
     // Sending Response to Client
     RESPONSE.handleErrorResponse(
       HTTP_STATUS_CODES.INTERNAL_SERVER_ERROR,
@@ -53,7 +54,7 @@ exports.createReview = async (req, res, next) => {
 exports.updateReview = async (req, res, next) => {
   try {
     // Initiating Logs
-    console.log(LOGGER_MESSAGES.REVIEW_UPDATE);
+    consoleHighlighted.initiate(LOGGER_MESSAGES.REVIEW_UPDATE);
     // Body Data
     const { reviewId, productId, ratingValue, reviewTitle, reviewDetails } =
       req.body;
@@ -75,7 +76,7 @@ exports.updateReview = async (req, res, next) => {
       req
     );
     // Closing Logs
-    console.log(LOGGER_MESSAGES.REVIEW_UPDATE_COMPLETED);
+    consoleHighlighted.success(LOGGER_MESSAGES.REVIEW_UPDATE_COMPLETED);
     // Sending Response to Client
     RESPONSE.handleSuccessResponse(
       HTTP_STATUS_CODES.OK,
@@ -85,9 +86,9 @@ exports.updateReview = async (req, res, next) => {
     );
   } catch (error) {
     // Closing Logs
-    console.log(LOGGER_MESSAGES.REVIEW_UPDATE_FAILED);
+    consoleHighlighted.error(LOGGER_MESSAGES.REVIEW_UPDATE_FAILED);
     // Logging Catched Error
-    console.log("Error: ", error);
+    consoleHighlighted.error("", error);
     // Sending Response to Client
     RESPONSE.handleErrorResponse(
       HTTP_STATUS_CODES.INTERNAL_SERVER_ERROR,
@@ -100,7 +101,7 @@ exports.updateReview = async (req, res, next) => {
 exports.getReviews = async (req, res, next) => {
   try {
     // Initiating Logs
-    console.log(LOGGER_MESSAGES.REVIEWS_FETCH);
+    consoleHighlighted.initiate(LOGGER_MESSAGES.REVIEWS_FETCH);
     // Query Data
     const { product_id } = req.query;
     // Checking required fields
@@ -113,7 +114,7 @@ exports.getReviews = async (req, res, next) => {
       req
     );
     // Closing Logs
-    console.log(LOGGER_MESSAGES.REVIEWS_FETCH_COMPLETED);
+    consoleHighlighted.success(LOGGER_MESSAGES.REVIEWS_FETCH_COMPLETED);
     // Sending Response to Client
     RESPONSE.handleSuccessResponse(
       HTTP_STATUS_CODES.OK,
@@ -123,9 +124,9 @@ exports.getReviews = async (req, res, next) => {
     );
   } catch (error) {
     // Closing Logs
-    console.log(LOGGER_MESSAGES.REVIEWS_FETCH_FAILED);
+    consoleHighlighted.error(LOGGER_MESSAGES.REVIEWS_FETCH_FAILED);
     // Logging Catched Error
-    console.log("Error: ", error);
+    consoleHighlighted.error("", error);
     // Sending Response to Client
     RESPONSE.handleErrorResponse(
       HTTP_STATUS_CODES.INTERNAL_SERVER_ERROR,
@@ -138,7 +139,7 @@ exports.getReviews = async (req, res, next) => {
 exports.deleteReview = async (req, res, next) => {
   try {
     // Initiating Logs
-    console.log(LOGGER_MESSAGES.REVIEW_DELETE);
+    consoleHighlighted.initiate(LOGGER_MESSAGES.REVIEW_DELETE);
     // Query Data
     const { product_id } = req.query;
     console.log("product_id: ", product_id);
@@ -153,7 +154,7 @@ exports.deleteReview = async (req, res, next) => {
       req
     );
     // Closing Logs
-    console.log(LOGGER_MESSAGES.REVIEW_DELETE_COMPLETED);
+    consoleHighlighted.success(LOGGER_MESSAGES.REVIEW_DELETE_COMPLETED);
     // Sending Response to Client
     RESPONSE.handleSuccessResponse(
       HTTP_STATUS_CODES.OK,
@@ -163,9 +164,9 @@ exports.deleteReview = async (req, res, next) => {
     );
   } catch (error) {
     // Closing Logs
-    console.log(LOGGER_MESSAGES.REVIEW_DELETE_FAILED);
+    consoleHighlighted.error(LOGGER_MESSAGES.REVIEW_DELETE_FAILED);
     // Logging Catched Error
-    console.log("Error: ", error);
+    consoleHighlighted.error("", error);
     // Sending Response to Client
     RESPONSE.handleErrorResponse(
       HTTP_STATUS_CODES.INTERNAL_SERVER_ERROR,

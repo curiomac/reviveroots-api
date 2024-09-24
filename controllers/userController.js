@@ -1,6 +1,7 @@
 const CustomError = require("../helpers/customError");
 const HandleResponse = require("../helpers/handleResponse");
 const UserService = require("../services/userServices");
+const { consoleHighlighted } = require("../utils/chalk");
 const CLIENT_MESSAGES = require("../utils/clientResponseConstants");
 const HTTP_STATUS_CODES = require("../utils/httpStatusCodes");
 const sendToken = require("../utils/jwt");
@@ -14,7 +15,7 @@ const UserServiceInstance = UserService();
 exports.sendSecretCode = async (req, res) => {
   try {
     // Initiating Logs
-    console.log(LOGGER_MESSAGES.CONTROLLER + LOGGER_MESSAGES.SECRET_CODE_SEND);
+    consoleHighlighted.initiate(LOGGER_MESSAGES.CONTROLLER + LOGGER_MESSAGES.SECRET_CODE_SEND);
     // Body data
     const { email } = req.body;
     // Checking required fields
@@ -27,7 +28,7 @@ exports.sendSecretCode = async (req, res) => {
       req
     );
     // Closing Logs
-    console.log(
+    consoleHighlighted.success(
       LOGGER_MESSAGES.CONTROLLER + LOGGER_MESSAGES.SECRET_CODE_SEND_COMPLETED
     );
     // Sending Response to Client
@@ -39,7 +40,7 @@ exports.sendSecretCode = async (req, res) => {
     );
   } catch (error) {
     // Closing Logs
-    console.log(
+    consoleHighlighted.error(
       LOGGER_MESSAGES.CONTROLLER + LOGGER_MESSAGES.SECRET_CODE_SEND_FAILED
     );
     // Sending Response to Client
@@ -55,7 +56,7 @@ exports.sendSecretCode = async (req, res) => {
 exports.registerUser = async (req, res, next) => {
   try {
     // Initiating Logs
-    console.log(LOGGER_MESSAGES.CONTROLLER + LOGGER_MESSAGES.REGISTER_USER);
+    consoleHighlighted.initiate(LOGGER_MESSAGES.CONTROLLER + LOGGER_MESSAGES.REGISTER_USER);
     // Body Data
     const { email, secretCodeClient } = req.body;
     // Checking required fields
@@ -72,11 +73,11 @@ exports.registerUser = async (req, res, next) => {
     );
   } catch (error) {
     // Closing Logs
-    console.log(
+    consoleHighlighted.error(
       LOGGER_MESSAGES.CONTROLLER + LOGGER_MESSAGES.REGISTER_USER_FAILED
     );
     // Logging Catched Error
-    console.log(LOGGER_MESSAGES.CONTROLLER + error);
+    consoleHighlighted.error("", error);
     // Sending Response to Client
     RESPONSE.handleErrorResponse(
       HTTP_STATUS_CODES.INTERNAL_SERVER_ERROR,
@@ -89,7 +90,7 @@ exports.registerUser = async (req, res, next) => {
 exports.loginUser = async (req, res, next) => {
   try {
     // Initiating Logs
-    console.log(LOGGER_MESSAGES.CONTROLLER + LOGGER_MESSAGES.LOGIN_USER);
+    consoleHighlighted.initiate(LOGGER_MESSAGES.CONTROLLER + LOGGER_MESSAGES.LOGIN_USER);
     // Body Data
     const { email, secretCodeClient } = req.body;
     // Checking required fields
@@ -102,13 +103,13 @@ exports.loginUser = async (req, res, next) => {
     sendToken(
       responseData,
       res,
-      LOGGER_MESSAGES.CONTROLLER + LOGGER_MESSAGES.LOGIN_COMPLETED
+      LOGGER_MESSAGES.LOGIN_COMPLETED
     );
   } catch (error) {
     // Closing Logs
-    console.log(LOGGER_MESSAGES.CONTROLLER + LOGGER_MESSAGES.LOGIN_FAILED);
+    consoleHighlighted.error(LOGGER_MESSAGES.CONTROLLER + LOGGER_MESSAGES.LOGIN_FAILED);
     // Logging Catched Error
-    console.log(LOGGER_MESSAGES.CONTROLLER + error);
+    consoleHighlighted.error("", error);
     // Sending Response to Client
     RESPONSE.handleErrorResponse(
       HTTP_STATUS_CODES.INTERNAL_SERVER_ERROR,
@@ -121,11 +122,11 @@ exports.loginUser = async (req, res, next) => {
 exports.getProfile = async (req, res, next) => {
   try {
     // Initiating Logs
-    console.log(LOGGER_MESSAGES.CONTROLLER + LOGGER_MESSAGES.PROFILE_FETCH);
+    consoleHighlighted.initiate(LOGGER_MESSAGES.CONTROLLER + LOGGER_MESSAGES.PROFILE_FETCH);
     // Response from the Service
     const responseData = await UserServiceInstance.getProfile(req);
     // Closing Logs
-    console.log(
+    consoleHighlighted.success(
       LOGGER_MESSAGES.CONTROLLER + LOGGER_MESSAGES.PROFILE_FETCH_COMPLETED
     );
     // Sending Response to Client
@@ -137,11 +138,11 @@ exports.getProfile = async (req, res, next) => {
     );
   } catch (error) {
     // Closing Logs
-    console.log(
+    consoleHighlighted.error(
       LOGGER_MESSAGES.CONTROLLER + LOGGER_MESSAGES.PROFILE_FETCH_FAILED
     );
     // Logging Catched Error
-    console.log(LOGGER_MESSAGES.CONTROLLER + error);
+    consoleHighlighted.error("", error);
     // Sending Response to Client
     RESPONSE.handleErrorResponse(
       HTTP_STATUS_CODES.INTERNAL_SERVER_ERROR,
@@ -154,7 +155,7 @@ exports.getProfile = async (req, res, next) => {
 exports.updateProfile = async (req, res, next) => {
   try {
     // Initiating Logs
-    console.log(LOGGER_MESSAGES.CONTROLLER + LOGGER_MESSAGES.PROFILE_UPDATE);
+    consoleHighlighted.initiate(LOGGER_MESSAGES.CONTROLLER + LOGGER_MESSAGES.PROFILE_UPDATE);
     // Body Data
     const { email } = req.body;
     // Checking required fields
@@ -164,7 +165,7 @@ exports.updateProfile = async (req, res, next) => {
     // Response from the Service
     const responseData = await UserServiceInstance.updateProfile(req.body, req);
     // Closing Logs
-    console.log(
+    consoleHighlighted.success(
       LOGGER_MESSAGES.CONTROLLER + LOGGER_MESSAGES.PROFILE_UPDATE_COMPLETED
     );
     // Sending Response to Client
@@ -176,11 +177,11 @@ exports.updateProfile = async (req, res, next) => {
     );
   } catch (error) {
     // Closing Logs
-    console.log(
+    consoleHighlighted.error(
       LOGGER_MESSAGES.CONTROLLER + LOGGER_MESSAGES.PROFILE_UPDATE_FAILED
     );
     // Logging Catched Error
-    console.log(LOGGER_MESSAGES.CONTROLLER + error);
+    consoleHighlighted.error("", error);
     // Sending Response to Client
     RESPONSE.handleErrorResponse(
       HTTP_STATUS_CODES.INTERNAL_SERVER_ERROR,

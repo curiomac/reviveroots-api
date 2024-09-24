@@ -5,6 +5,7 @@ const CLIENT_MESSAGES = require("../utils/clientResponseConstants");
 const LOGGER_MESSAGES = require("../utils/logConstants");
 const ProductService = require("../services/productServices");
 const CustomError = require("../helpers/customError");
+const { consoleHighlighted } = require("../utils/chalk")
 
 // Creating a Service Instance
 const ProductServiceInstance = ProductService();
@@ -13,7 +14,7 @@ const ProductServiceInstance = ProductService();
 exports.createProduct = async (req, res, next) => {
   try {
     // Initiating Logs
-    console.log(LOGGER_MESSAGES.PRODUCT_CREATION);
+    consoleHighlighted.initiate(LOGGER_MESSAGES.PRODUCT_CREATION);
     // Body Data
     const {
       productName,
@@ -41,8 +42,8 @@ exports.createProduct = async (req, res, next) => {
       req.body,
       req
     );
-    // Closing Logs
-    console.log(LOGGER_MESSAGES.PRODUCT_CREATION_COMPLETED);
+  // Closing Logs
+    consoleHighlighted.success(LOGGER_MESSAGES.PRODUCT_CREATION_COMPLETED);
     // Sending Response to Client
     RESPONSE.handleSuccessResponse(
       HTTP_STATUS_CODES.OK,
@@ -52,9 +53,9 @@ exports.createProduct = async (req, res, next) => {
     );
   } catch (error) {
     // Closing Logs
-    console.log(LOGGER_MESSAGES.PRODUCT_CREATION_FAILED);
+    consoleHighlighted.error(LOGGER_MESSAGES.PRODUCT_CREATION_FAILED);
     // Logging Catched Error
-    console.log("Error: ", error);
+    consoleHighlighted.error("", error);
     // Sending Response to Client
     RESPONSE.handleErrorResponse(
       HTTP_STATUS_CODES.INTERNAL_SERVER_ERROR,
@@ -68,7 +69,7 @@ exports.createProduct = async (req, res, next) => {
 exports.updateProduct = async (req, res, next) => {
   try {
     // Initiating Logs
-    console.log(LOGGER_MESSAGES.PRODUCT_UPDATE);
+    consoleHighlighted.initiate(LOGGER_MESSAGES.PRODUCT_UPDATE);
     // Body Data
     const {
       productName,
@@ -96,8 +97,8 @@ exports.updateProduct = async (req, res, next) => {
       req.body,
       req
     );
-    // Closing Logs
-    console.log(LOGGER_MESSAGES.PRODUCT_UPDATE_COMPLETED);
+  // Closing Logs
+    consoleHighlighted.success(LOGGER_MESSAGES.PRODUCT_UPDATE_COMPLETED);
     // Sending Response to Client
     RESPONSE.handleSuccessResponse(
       HTTP_STATUS_CODES.OK,
@@ -107,9 +108,9 @@ exports.updateProduct = async (req, res, next) => {
     );
   } catch (error) {
     // Closing Logs
-    console.log(LOGGER_MESSAGES.PRODUCT_UPDATE_FAILED);
+    consoleHighlighted.error(LOGGER_MESSAGES.PRODUCT_UPDATE_FAILED);
     // Logging Catched Error
-    console.log("Error: ", error);
+    consoleHighlighted.error("", error);
     // Sending Response to Client
     RESPONSE.handleErrorResponse(
       HTTP_STATUS_CODES.INTERNAL_SERVER_ERROR,
@@ -123,11 +124,11 @@ exports.updateProduct = async (req, res, next) => {
 exports.getProducts = async (req, res, next) => {
   try {
     // Initiating Logs
-    console.log(LOGGER_MESSAGES.PRODUCTS_FETCH);
+    consoleHighlighted.initiate(LOGGER_MESSAGES.PRODUCTS_FETCH);
     // Response from the Service
     const responseData = await ProductServiceInstance.getProducts(req);
     // Closing Logs
-    console.log(LOGGER_MESSAGES.PRODUCTS_FETCH_COMPLETED);
+    consoleHighlighted.success(LOGGER_MESSAGES.PRODUCTS_FETCH_COMPLETED);
     // Sending Response to Client
     RESPONSE.handleSuccessResponse(
       HTTP_STATUS_CODES.OK,
@@ -137,9 +138,9 @@ exports.getProducts = async (req, res, next) => {
     );
   } catch (error) {
     // Closing Logs
-    console.log(LOGGER_MESSAGES.PRODUCTS_FETCH_FAILED);
+    consoleHighlighted.error(LOGGER_MESSAGES.PRODUCTS_FETCH_FAILED);
     // Logging Catched Error
-    console.log("Error: ", error);
+    consoleHighlighted.error("", error);
     // Sending Response to Client
     RESPONSE.handleErrorResponse(
       HTTP_STATUS_CODES.INTERNAL_SERVER_ERROR,
@@ -152,11 +153,11 @@ exports.getProducts = async (req, res, next) => {
 exports.getCategoryProducts = async (req, res, next) => {
   try {
     // Initiating Logs
-    console.log(LOGGER_MESSAGES.CATEGORY_PRODUCTS_FETCH);
+    consoleHighlighted.initiate(LOGGER_MESSAGES.CATEGORY_PRODUCTS_FETCH);
     // Response from the Service
     const responseData = await ProductServiceInstance.getCategoryProducts(req);
-    // Closing Logs
-    console.log(LOGGER_MESSAGES.CATEGORY_PRODUCTS_FETCH_COMPLETED);
+  // Closing Logs
+    consoleHighlighted.success(LOGGER_MESSAGES.CATEGORY_PRODUCTS_FETCH_COMPLETED);
     // Sending Response to Client
     RESPONSE.handleSuccessResponse(
       HTTP_STATUS_CODES.OK,
@@ -166,9 +167,9 @@ exports.getCategoryProducts = async (req, res, next) => {
     );
   } catch (error) {
     // Closing Logs
-    console.log(LOGGER_MESSAGES.CATEGORY_PRODUCTS_FETCH_FAILED);
+    consoleHighlighted.error(LOGGER_MESSAGES.CATEGORY_PRODUCTS_FETCH_FAILED);
     // Logging Catched Error
-    console.log("Error: ", error);
+    consoleHighlighted.error("", error);
     // Sending Response to Client
     RESPONSE.handleErrorResponse(
       HTTP_STATUS_CODES.INTERNAL_SERVER_ERROR,
@@ -181,7 +182,7 @@ exports.getCategoryProducts = async (req, res, next) => {
 exports.getRecentProducts = async (req, res, next) => {
   try {
     // Initiating Logs
-    console.log(LOGGER_MESSAGES.RECENT_PRODUCTS_FETCH);
+    consoleHighlighted.initiate(LOGGER_MESSAGES.RECENT_PRODUCTS_FETCH);
     // Query Data
     const { product_ids } = req.query;
 
@@ -194,8 +195,8 @@ exports.getRecentProducts = async (req, res, next) => {
       product_ids,
       req
     );
-    // Closing Logs
-    console.log(LOGGER_MESSAGES.RECENT_PRODUCTS_FETCH_COMPLETED);
+  // Closing Logs
+    consoleHighlighted.success(LOGGER_MESSAGES.RECENT_PRODUCTS_FETCH_COMPLETED);
     // Sending Response to Client
     RESPONSE.handleSuccessResponse(
       HTTP_STATUS_CODES.OK,
@@ -205,9 +206,9 @@ exports.getRecentProducts = async (req, res, next) => {
     );
   } catch (error) {
     // Closing Logs
-    console.log(LOGGER_MESSAGES.RECENT_PRODUCTS_FETCH_FAILED);
+    consoleHighlighted.error(LOGGER_MESSAGES.RECENT_PRODUCTS_FETCH_FAILED);
     // Logging Catched Error
-    console.log("Error: ", error);
+    consoleHighlighted.error("", error);
     // Sending Response to Client
     RESPONSE.handleErrorResponse(
       HTTP_STATUS_CODES.INTERNAL_SERVER_ERROR,
@@ -220,7 +221,7 @@ exports.getRecentProducts = async (req, res, next) => {
 exports.getSimilarProducts = async (req, res, next) => {
   try {
     // Initiating Logs
-    console.log(LOGGER_MESSAGES.SIMILAR_PRODUCTS_FETCH);
+    consoleHighlighted.initiate(LOGGER_MESSAGES.SIMILAR_PRODUCTS_FETCH);
     // Query Data
     const { productTags } = req.query;
 
@@ -233,8 +234,8 @@ exports.getSimilarProducts = async (req, res, next) => {
       req.query,
       req
     );
-    // Closing Logs
-    console.log(LOGGER_MESSAGES.SIMILAR_PRODUCTS_FETCH_COMPLETED);
+  // Closing Logs
+    consoleHighlighted.success(LOGGER_MESSAGES.SIMILAR_PRODUCTS_FETCH_COMPLETED);
     // Sending Response to Client
     RESPONSE.handleSuccessResponse(
       HTTP_STATUS_CODES.OK,
@@ -244,9 +245,9 @@ exports.getSimilarProducts = async (req, res, next) => {
     );
   } catch (error) {
     // Closing Logs
-    console.log(LOGGER_MESSAGES.SIMILAR_PRODUCTS_FETCH_FAILED);
+    consoleHighlighted.error(LOGGER_MESSAGES.SIMILAR_PRODUCTS_FETCH_FAILED);
     // Logging Catched Error
-    console.log("Error: ", error);
+    consoleHighlighted.error("", error);
     // Sending Response to Client
     RESPONSE.handleErrorResponse(
       HTTP_STATUS_CODES.INTERNAL_SERVER_ERROR,
@@ -259,11 +260,11 @@ exports.getSimilarProducts = async (req, res, next) => {
 exports.getPopularProducts = async (req, res, next) => {
   try {
     // Initiating Logs
-    console.log(LOGGER_MESSAGES.POPULAR_PRODUCTS_FETCH);
+    consoleHighlighted.initiate(LOGGER_MESSAGES.POPULAR_PRODUCTS_FETCH);
     // Response from the Service
     const responseData = await ProductServiceInstance.getPopularProducts(req);
-    // Closing Logs
-    console.log(LOGGER_MESSAGES.POPULAR_PRODUCTS_FETCH_COMPLETED);
+  // Closing Logs
+    consoleHighlighted.success(LOGGER_MESSAGES.POPULAR_PRODUCTS_FETCH_COMPLETED);
     // Sending Response to Client
     RESPONSE.handleSuccessResponse(
       HTTP_STATUS_CODES.OK,
@@ -273,9 +274,9 @@ exports.getPopularProducts = async (req, res, next) => {
     );
   } catch (error) {
     // Closing Logs
-    console.log(LOGGER_MESSAGES.POPULAR_PRODUCTS_FETCH_FAILED);
+    consoleHighlighted.error(LOGGER_MESSAGES.POPULAR_PRODUCTS_FETCH_FAILED);
     // Logging Catched Error
-    console.log("Error: ", error);
+    consoleHighlighted.error("", error);
     // Sending Response to Client
     RESPONSE.handleErrorResponse(
       HTTP_STATUS_CODES.INTERNAL_SERVER_ERROR,
@@ -288,13 +289,13 @@ exports.getPopularProducts = async (req, res, next) => {
 exports.getRecommendedProducts = async (req, res, next) => {
   try {
     // Initiating Logs
-    console.log(LOGGER_MESSAGES.RECOMMENDED_PRODUCTS_FETCH);
+    consoleHighlighted.initiate(LOGGER_MESSAGES.RECOMMENDED_PRODUCTS_FETCH);
     // Response from the Service
     const responseData = await ProductServiceInstance.getRecommendedProducts(
       req
     );
-    // Closing Logs
-    console.log(LOGGER_MESSAGES.RECOMMENDED_PRODUCTS_FETCH_COMPLETED);
+  // Closing Logs
+    consoleHighlighted.success(LOGGER_MESSAGES.RECOMMENDED_PRODUCTS_FETCH_COMPLETED);
     // Sending Response to Client
     RESPONSE.handleSuccessResponse(
       HTTP_STATUS_CODES.OK,
@@ -304,9 +305,9 @@ exports.getRecommendedProducts = async (req, res, next) => {
     );
   } catch (error) {
     // Closing Logs
-    console.log(LOGGER_MESSAGES.RECOMMENDED_PRODUCTS_FETCH_COMPLETED);
+    consoleHighlighted.error(LOGGER_MESSAGES.RECOMMENDED_PRODUCTS_FETCH_COMPLETED);
     // Logging Catched Error
-    console.log("Error: ", error);
+    consoleHighlighted.error("", error);
     // Sending Response to Client
     RESPONSE.handleErrorResponse(
       HTTP_STATUS_CODES.INTERNAL_SERVER_ERROR,
@@ -319,7 +320,7 @@ exports.getRecommendedProducts = async (req, res, next) => {
 exports.getProduct = async (req, res, next) => {
   try {
     // Initiating Logs
-    console.log(LOGGER_MESSAGES.PRODUCT_FETCH);
+    consoleHighlighted.initiate(LOGGER_MESSAGES.PRODUCT_FETCH);
     // Query Data
     const { product_id } = req.query;
     // Checking required fields
@@ -331,8 +332,8 @@ exports.getProduct = async (req, res, next) => {
       product_id,
       req
     );
-    // Closing Logs
-    console.log(LOGGER_MESSAGES.PRODUCT_FETCH_COMPLETED);
+  // Closing Logs
+    consoleHighlighted.success(LOGGER_MESSAGES.PRODUCT_FETCH_COMPLETED);
     // Sending Response to Client
     RESPONSE.handleSuccessResponse(
       HTTP_STATUS_CODES.OK,
@@ -342,9 +343,9 @@ exports.getProduct = async (req, res, next) => {
     );
   } catch (error) {
     // Closing Logs
-    console.log(LOGGER_MESSAGES.PRODUCT_FETCH_FAILED);
+    consoleHighlighted.error(LOGGER_MESSAGES.PRODUCT_FETCH_FAILED);
     // Logging Catched Error
-    console.log("Error: ", error);
+    consoleHighlighted.error("", error);
     // Sending Response to Client
     RESPONSE.handleErrorResponse(
       HTTP_STATUS_CODES.INTERNAL_SERVER_ERROR,
@@ -357,7 +358,7 @@ exports.getProduct = async (req, res, next) => {
 exports.deleteProduct = async (req, res, next) => {
   try {
     // Initiating Logs
-    console.log(LOGGER_MESSAGES.PRODUCT_DELETE);
+    consoleHighlighted.initiate(LOGGER_MESSAGES.PRODUCT_DELETE);
     // Query Data
     const { product_id } = req.query;
     // Checking required fields
@@ -369,8 +370,8 @@ exports.deleteProduct = async (req, res, next) => {
       product_id,
       req
     );
-    // Closing Logs
-    console.log(LOGGER_MESSAGES.PRODUCT_DELETE_COMPLETED);
+  // Closing Logs
+    consoleHighlighted.success(LOGGER_MESSAGES.PRODUCT_DELETE_COMPLETED);
     // Sending Response to Client
     RESPONSE.handleSuccessResponse(
       HTTP_STATUS_CODES.OK,
@@ -380,9 +381,9 @@ exports.deleteProduct = async (req, res, next) => {
     );
   } catch (error) {
     // Closing Logs
-    console.log(LOGGER_MESSAGES.PRODUCT_DELETE_FAILED);
+    consoleHighlighted.error(LOGGER_MESSAGES.PRODUCT_DELETE_FAILED);
     // Logging Catched Error
-    console.log("Error: ", error);
+    consoleHighlighted.error("", error);
     // Sending Response to Client
     RESPONSE.handleErrorResponse(
       HTTP_STATUS_CODES.INTERNAL_SERVER_ERROR,

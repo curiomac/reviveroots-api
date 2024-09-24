@@ -5,6 +5,7 @@ const CLIENT_MESSAGES = require("../utils/clientResponseConstants");
 const LOGGER_MESSAGES = require("../utils/logConstants");
 const TestQuestionsService = require("../services/testQuestionsServices");
 const CustomError = require("../helpers/customError");
+const { consoleHighlighted } = require("../utils/chalk");
 
 // Creating a Service Instance
 const TestQuestionsServiceInstance = TestQuestionsService();
@@ -13,7 +14,7 @@ const TestQuestionsServiceInstance = TestQuestionsService();
 exports.createTestQuestions = async (req, res, next) => {
   try {
     // Initiating Logs
-    console.log(LOGGER_MESSAGES.TEST_QUESTIONS_CREATION);
+    consoleHighlighted.initiate(LOGGER_MESSAGES.TEST_QUESTIONS_CREATION);
     // Body Data
     const { userName, email, mobileNumber, age, gender, testQuestions } =
       req.body;
@@ -34,7 +35,7 @@ exports.createTestQuestions = async (req, res, next) => {
       req
     );
     // Closing Logs
-    console.log(LOGGER_MESSAGES.TEST_QUESTIONS_CREATION_COMPLETED);
+    consoleHighlighted.success(LOGGER_MESSAGES.TEST_QUESTIONS_CREATION_COMPLETED);
     // Sending Response to Client
     RESPONSE.handleSuccessResponse(
       HTTP_STATUS_CODES.OK,
@@ -44,9 +45,9 @@ exports.createTestQuestions = async (req, res, next) => {
     );
   } catch (error) {
     // Closing Logs
-    console.log(LOGGER_MESSAGES.TEST_QUESTIONS_CREATION_FAILED);
+    consoleHighlighted.error(LOGGER_MESSAGES.TEST_QUESTIONS_CREATION_FAILED);
     // Logging Catched Error
-    console.log("Error: ", error);
+    consoleHighlighted.error("Error: ", error);
     // Sending Response to Client
     RESPONSE.handleErrorResponse(
       HTTP_STATUS_CODES.INTERNAL_SERVER_ERROR,
@@ -59,13 +60,13 @@ exports.createTestQuestions = async (req, res, next) => {
 exports.getTestQuestions = async (req, res, next) => {
   try {
     // Initiating Logs
-    console.log(LOGGER_MESSAGES.TEST_QUESTIONSES_FETCH);
+    consoleHighlighted.initiate(LOGGER_MESSAGES.TEST_QUESTIONSES_FETCH);
     // Response from the Service
     const responseData = await TestQuestionsServiceInstance.getTestQuestions(
       req
     );
     // Closing Logs
-    console.log(LOGGER_MESSAGES.TEST_QUESTIONSES_FETCH_COMPLETED);
+    consoleHighlighted.success(LOGGER_MESSAGES.TEST_QUESTIONSES_FETCH_COMPLETED);
     // Sending Response to Client
     RESPONSE.handleSuccessResponse(
       HTTP_STATUS_CODES.OK,
@@ -75,9 +76,9 @@ exports.getTestQuestions = async (req, res, next) => {
     );
   } catch (error) {
     // Closing Logs
-    console.log(LOGGER_MESSAGES.TEST_QUESTIONSES_FETCH_FAILED);
+    consoleHighlighted.error(LOGGER_MESSAGES.TEST_QUESTIONSES_FETCH_FAILED);
     // Logging Catched Error
-    console.log("Error: ", error);
+    consoleHighlighted.error("Error: ", error);
     // Sending Response to Client
     RESPONSE.handleErrorResponse(
       HTTP_STATUS_CODES.INTERNAL_SERVER_ERROR,

@@ -1,5 +1,7 @@
+const { chalk } = require("./chalk")
+
 const MESSAGES = {
-  PORT_LISTEN: "Server is now running on port ",
+  PORT_LISTEN: chalk.magenta("Server is now running on port: "),
 };
 
 const ERROR_MESSAGES = {
@@ -40,11 +42,11 @@ const ROLES = {
 };
 
 const DBCONNECTION = {
-  SUCCESSFUL: "Connected to MongoDB",
-  UNSUCCESSFUL: "MongoDB connection error",
-  ERROR: "MongoDB connection error",
-  RECONNECTED: "Reconnected to MongoDB",
-  DISCONNECTED: "MongoDB disconnected. Reconnecting...",
+  SUCCESSFUL: chalk.green("Connected to MongoDB"),
+  UNSUCCESSFUL: chalk.red("MongoDB connection error"),
+  ERROR: chalk.red("MongoDB connection error"),
+  RECONNECTED: chalk.yellow("Reconnected to MongoDB"),
+  DISCONNECTED: chalk.yellow("MongoDB disconnected. Reconnecting..."),
 };
 
 const TOKEN = {

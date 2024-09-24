@@ -5,6 +5,7 @@ const CLIENT_MESSAGES = require("../utils/clientResponseConstants");
 const LOGGER_MESSAGES = require("../utils/logConstants");
 const AddressService = require("../services/addressServices");
 const CustomError = require("../helpers/customError");
+const { consoleHighlighted } = require("../utils/chalk");
 
 // Creating a Service Instance
 const AddressServiceInstance = AddressService();
@@ -13,7 +14,7 @@ const AddressServiceInstance = AddressService();
 exports.createAddress = async (req, res, next) => {
   try {
     // Initiating Logs
-    console.log(LOGGER_MESSAGES.ADDRESS_CREATION);
+    consoleHighlighted.initiate(LOGGER_MESSAGES.ADDRESS_CREATION);
     // Body Data
     const {
       addressName,
@@ -46,7 +47,7 @@ exports.createAddress = async (req, res, next) => {
       req
     );
     // Closing Logs
-    console.log(LOGGER_MESSAGES.ADDRESS_CREATION_COMPLETED);
+    consoleHighlighted.success(LOGGER_MESSAGES.ADDRESS_CREATION_COMPLETED);
     // Sending Response to Client
     RESPONSE.handleSuccessResponse(
       HTTP_STATUS_CODES.OK,
@@ -56,9 +57,9 @@ exports.createAddress = async (req, res, next) => {
     );
   } catch (error) {
     // Closing Logs
-    console.log(LOGGER_MESSAGES.ADDRESS_CREATION_FAILED);
+    consoleHighlighted.error(LOGGER_MESSAGES.ADDRESS_CREATION_FAILED);
     // Logging Catched Error
-    console.log("Error: ", error);
+    consoleHighlighted.error("", error);
     // Sending Response to Client
     RESPONSE.handleErrorResponse(
       HTTP_STATUS_CODES.INTERNAL_SERVER_ERROR,
@@ -71,7 +72,7 @@ exports.createAddress = async (req, res, next) => {
 exports.updateAddress = async (req, res, next) => {
   try {
     // Initiating Logs
-    console.log(LOGGER_MESSAGES.ADDRESS_UPDATE);
+    consoleHighlighted.initiate(LOGGER_MESSAGES.ADDRESS_UPDATE);
     // Body Data
     const {
       addressName,
@@ -106,7 +107,7 @@ exports.updateAddress = async (req, res, next) => {
       req
     );
     // Closing Logs
-    console.log(LOGGER_MESSAGES.ADDRESS_UPDATE_COMPLETED);
+    consoleHighlighted.success(LOGGER_MESSAGES.ADDRESS_UPDATE_COMPLETED);
     // Sending Response to Client
     RESPONSE.handleSuccessResponse(
       HTTP_STATUS_CODES.OK,
@@ -116,9 +117,9 @@ exports.updateAddress = async (req, res, next) => {
     );
   } catch (error) {
     // Closing Logs
-    console.log(LOGGER_MESSAGES.ADDRESS_UPDATE_FAILED);
+    consoleHighlighted.error(LOGGER_MESSAGES.ADDRESS_UPDATE_FAILED);
     // Logging Catched Error
-    console.log("Error: ", error);
+    consoleHighlighted.error("", error);
     // Sending Response to Client
     RESPONSE.handleErrorResponse(
       HTTP_STATUS_CODES.INTERNAL_SERVER_ERROR,
@@ -131,11 +132,11 @@ exports.updateAddress = async (req, res, next) => {
 exports.getAddresses = async (req, res, next) => {
   try {
     // Initiating Logs
-    console.log(LOGGER_MESSAGES.ADDRESSES_FETCH);
+    consoleHighlighted.initiate(LOGGER_MESSAGES.ADDRESSES_FETCH);
     // Response from the Service
     const responseData = await AddressServiceInstance.getAddresses(req);
     // Closing Logs
-    console.log(LOGGER_MESSAGES.ADDRESSES_FETCH_COMPLETED);
+    consoleHighlighted.success(LOGGER_MESSAGES.ADDRESSES_FETCH_COMPLETED);
     // Sending Response to Client
     RESPONSE.handleSuccessResponse(
       HTTP_STATUS_CODES.OK,
@@ -145,9 +146,9 @@ exports.getAddresses = async (req, res, next) => {
     );
   } catch (error) {
     // Closing Logs
-    console.log(LOGGER_MESSAGES.ADDRESSES_FETCH_FAILED);
+    consoleHighlighted.error(LOGGER_MESSAGES.ADDRESSES_FETCH_FAILED);
     // Logging Catched Error
-    console.log("Error: ", error);
+    consoleHighlighted.error("", error);
     // Sending Response to Client
     RESPONSE.handleErrorResponse(
       HTTP_STATUS_CODES.INTERNAL_SERVER_ERROR,
@@ -160,7 +161,7 @@ exports.getAddresses = async (req, res, next) => {
 exports.deleteAddress = async (req, res, next) => {
   try {
     // Initiating Logs
-    console.log(LOGGER_MESSAGES.ADDRESS_DELETE);
+    consoleHighlighted.initiate(LOGGER_MESSAGES.ADDRESS_DELETE);
     // Query Data
     const { address_id } = req.query;
     // Checking required fields
@@ -173,7 +174,7 @@ exports.deleteAddress = async (req, res, next) => {
       req
     );
     // Closing Logs
-    console.log(LOGGER_MESSAGES.ADDRESS_DELETE_COMPLETED);
+    consoleHighlighted.success(LOGGER_MESSAGES.ADDRESS_DELETE_COMPLETED);
     // Sending Response to Client
     RESPONSE.handleSuccessResponse(
       HTTP_STATUS_CODES.OK,
@@ -183,9 +184,9 @@ exports.deleteAddress = async (req, res, next) => {
     );
   } catch (error) {
     // Closing Logs
-    console.log(LOGGER_MESSAGES.ADDRESS_DELETE_FAILED);
+    consoleHighlighted.error(LOGGER_MESSAGES.ADDRESS_DELETE_FAILED);
     // Logging Catched Error
-    console.log("Error: ", error);
+    consoleHighlighted.error("", error);
     // Sending Response to Client
     RESPONSE.handleErrorResponse(
       HTTP_STATUS_CODES.INTERNAL_SERVER_ERROR,
